@@ -1,0 +1,23 @@
+{
+  "name": "coolships",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dinamico.js",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jisbruzzi/coolships.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jisbruzzi/coolships/issues"
+  },
+  "homepage": "https://github.com/jisbruzzi/coolships#readme"
+}

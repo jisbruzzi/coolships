@@ -4,7 +4,7 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
 
     //obtener todas las alternativas posibles
     let alternativas = 
-    disparosPosibles
+    disparosPosibles(lanzaderas,barcos)
     .map(d=>
         mejoresPartidas(turno-1,d,lanzaderas,vulnerabilidades,barcos)
     )
@@ -59,7 +59,7 @@ function dinamico(lanzaderas,vulnerabilidades,barcos) {
     let t=0;
     let partidas=[]
     while (partidas.length==0 || !partidas.some((p)=>p.obtenerBarcosVivos()==0)){
-        partidas=mejoresPartidas(turno,ningunDisparo,lanzaderas,vulnerabilidades,barcos)
+        partidas=mejoresPartidas(turno,ningunDisparo(lanzaderas,barcos),lanzaderas,vulnerabilidades,barcos)//este es un buen caso inicial? o sería turno+1 ?
     }
 
     return partidas.filter((p)=>p.obtenerBarcosVivos()==0)
