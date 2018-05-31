@@ -1,10 +1,34 @@
+function partida(barcos){
+    let o={}
+    o.agregarDanios=function(fila,disparo){
+        return partida(barcos.map((b,i)=>{
+            if(disparo.dispara(i)){
+                return b.conDanio(fila.danio(i))
+            }else{
+                return b
+            }
+        }))
+    }
+    o.obtenerBarcosVivos=function(){
+        return barcos.map(b=>{
+            if(b.vive()){
+                return 1
+            }else{
+                return 0
+            }
+        }).reduce((a,b)=>{
+            return a+b
+        },0)
+    }
+}
+
 //caso general
 function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
-    danios=vulnerabilidades(turno)
+    
 
     //obtener todas las alternativas posibles
     let alternativas = 
-    disparosPosibles(lanzaderas,barcos)
+    disparosPosibles(lanzaderas,barcos.length)
     .map(d=>
         mejoresPartidas(turno-1,d,lanzaderas,vulnerabilidades,barcos)
     )
@@ -15,7 +39,7 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     )
     //evaluar puntaje al agregar el disparo
     .map((a)=>
-        a.agregarDanios(danios(disparo))
+        a.agregarDanios(vulnerabilidades.enTurno(turno),disparo)
     )
 
     //quedarme con las alternativas no superadas
@@ -36,7 +60,7 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
 let mejoresPartidasGeneral=mejoresPartidas
 function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     if(turno==0){
-        return barcos
+        return partida(barcos)
     }else{
         return mejoresPartidasGeneral(turno,disparo,lanzaderas,vulnerabilidades,barcos)
     }
