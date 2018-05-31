@@ -1,6 +1,25 @@
-DisparoNulo ...
+funtion Disparo(barcos,disparan){
+	this.disparos=(new Array(barcos)).map(()=>disparan)
+	this.conDisparoInicial=function(){
+		return this.conInicial(true)
+	}
+	this.sinDisparoInicial=function(){
+		return this.conInicial(false)
+	}
+	this.conInicial=function(v){
+		let n=new Disparo(barcos,disparan)
+		n.disparos=[v].concat(this.disparos)
+		return n
+	}
 
-DisparoTodos ...
+}
+function DisparoNulo(barcos){
+	return new Disparo(barcos, false)
+}
+
+funtcion DisparoTodos(barcos){
+	return new Disparo(barcos, true)
+}
 
 function disparosPosibles(lanzaderas,barcos){
     if(barcos==0){
@@ -21,3 +40,8 @@ function disparosPosibles(lanzaderas,barcos){
     
     return disparosDisparoAhora.concat(disparosNoDisparoAhora)
 }
+
+
+module.exports.DisparoNulo=DisparoNulo
+module.exports.DisparoTodos=DisparoTodos
+
