@@ -1,4 +1,4 @@
-function partida(barcos){
+function partida(barcos,puntajeAcumulado){
     let o={}
     o.agregarDanios=function(fila,disparo){
         return partida(barcos.map((b,i)=>{
@@ -7,7 +7,7 @@ function partida(barcos){
             }else{
                 return b
             }
-        }))
+        }), o.obtenerPuntaje())
     }
     o.obtenerBarcosVivos=function(){
         return barcos.map(b=>{
@@ -20,6 +20,11 @@ function partida(barcos){
             return a+b
         },0)
     }
+	o.obtenerPuntaje=function(){
+		return o.obtenerBarcosVivos()+puntajeAcumulado;
+
+	}
+
 }
 
 //caso general

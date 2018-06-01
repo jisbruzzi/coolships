@@ -51,7 +51,7 @@ function disparosPosibles(lanzaderas,barcos){
 }
 
 
-module.exports.DisparoNulo=DisparoNulo
-module.exports.Disparo=Disparo
-module.exports.DisparoTodos=DisparoTodos
+module.exports.disparoNulo=disparoNulo
+module.exports.disparoVacio=disparoCompleto
+module.exports.disparoCompleto=disparoCompleto
 
