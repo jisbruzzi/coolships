@@ -9,6 +9,9 @@ function disparo(arrayDeDisparos){
     o.sinDisparoInicial=function(){
         return conInicial(false)
     }
+    o.dispara=function(v){
+        return arrayDeDisparos[v]
+    }
     return o;
 }
 
@@ -51,7 +54,8 @@ function disparosPosibles(lanzaderas,barcos){
 }
 
 
-module.exports.disparoNulo=disparoNulo
-module.exports.disparoVacio=disparoCompleto
-module.exports.disparoCompleto=disparoCompleto
+module.exports.nulo=disparoNulo
+module.exports.vacio=disparoVacio
+module.exports.completo=disparoCompleto
+module.exports.posibles=disparosPosibles
 
