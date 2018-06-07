@@ -7,5 +7,5 @@ function barco(vida){
 		return barco(vida-danio)
 	}
 	return o
-
 }
+module.exports=barco

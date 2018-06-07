@@ -4,6 +4,7 @@
   "description": "",
   "main": "dinamico.js",
   "dependencies": {
+    "babel": "^6.23.0",
     "chai": "^4.1.2"
   },
   "devDependencies": {
