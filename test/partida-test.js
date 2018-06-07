@@ -4,7 +4,7 @@ const barco=require("../barco")
 const vulnerabilidades=require("../vulnerabilidades")
 const disparo=require("../disparo")
 
-describe.only("Partidas",function(){
+describe("Partidas",function(){
     it("Los barcos mueren este turno",function(){
         let barcos=[
             barco(1),

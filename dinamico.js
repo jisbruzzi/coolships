@@ -36,7 +36,7 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
 let mejoresPartidasGeneral=mejoresPartidas
 function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     if(turno==0){
-        return partida(barcos)
+        return partida(barcos,0)
     }else{
         return mejoresPartidasGeneral(turno,disparo,lanzaderas,vulnerabilidades,barcos)
     }
@@ -64,3 +64,6 @@ function dinamico(lanzaderas,vulnerabilidades,barcos) {
 
     return partidas.filter((p)=>p.obtenerBarcosVivos()==0)
 }
+
+
+module.exports=dinamico
