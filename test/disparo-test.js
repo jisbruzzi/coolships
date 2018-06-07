@@ -6,6 +6,7 @@ function disparaComo(disparo,array){
         .map((v,i)=>v==disparo.dispara(i))
         .reduce((a,b)=>a && b)
 }
+
 describe("creacion de disparos",function(){
     it("disparo completo OK",function(){
         assert.isTrue(disparaComo(disparo.completo(3),[true,true,true]))
@@ -20,6 +21,7 @@ describe("creacion de disparos",function(){
         assert.isUndefined(disparo.nulo().dispara(0))
     })
 })
+
 describe("evolucion de disparos",function(){
     it("disparo completo OK",function(){
         let d = disparo.completo(2).conDisparoInicial().sinDisparoInicial()

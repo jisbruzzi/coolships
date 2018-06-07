@@ -1,9 +1,9 @@
 function partida(barcos,puntajeAcumulado){
     let o={}
-    o.agregarDanios=function(fila,disparo){
+    o.agregarDanios=function(danioEn,disparo){
         return partida(barcos.map((b,i)=>{
             if(disparo.dispara(i)){
-                return b.conDanio(fila.danio(i))
+                return b.conDanio(danioEn(i))
             }else{
                 return b
             }
