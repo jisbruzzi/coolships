@@ -1,6 +1,6 @@
 function partida(barcos,puntajeAcumulado){
     let o={}
-    o.agregarDanios=function(danioEn,disparo){
+    o.conDanios=function(danioEn,disparo){
         return partida(barcos.map((b,i)=>{
             if(disparo.dispara(i)){
                 return b.conDanio(danioEn(i))
@@ -22,7 +22,8 @@ function partida(barcos,puntajeAcumulado){
     }
 	o.obtenerPuntaje=function(){
 		return o.obtenerBarcosVivos()+puntajeAcumulado;
-	}
+    }
+    return o
 }
 
 module.exports=partida
