@@ -3,6 +3,7 @@ const partida = require("./partida")
 //caso general
 function mejoresPartidasGeneral(turno,disparoSiguiente,lanzaderas,vulnerabilidades,barcos){
     //obtener todas las alternativas posibles
+    console.log(disparo.posibles(lanzaderas,barcos.length).length)
     let alternativas = 
     disparo.posibles(lanzaderas,barcos.length)
     .map(d=>
@@ -29,6 +30,11 @@ function mejoresPartidasGeneral(turno,disparoSiguiente,lanzaderas,vulnerabilidad
             mejores.push(a)
         }
     }
+	/*
+    for(let m of mejores){
+	console.log(m.obtenerHistorial())
+    }
+    */
     return mejores
 }
 
@@ -59,13 +65,19 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
 function dinamico(lanzaderas,vulnerabilidades,barcos) {
     let t=0;
     let partidas=[]
+    let partidasAnteriores=[]
     let turnos=0
     while (partidas.length==0 || !partidas.some((p)=>p.obtenerBarcosVivos()==0)){
-        partidas=mejoresPartidas(turnos,disparo.vacio(barcos.length),lanzaderas,vulnerabilidades,barcos)//este es un buen caso inicial? o sería turno+1 ?
-	turnos+=1
+	partidasAnteriores=partidas
+        partidas=disparo.posibles(lanzaderas,barcos.length).map((d)=>
+		mejoresPartidas(turnos,d,lanzaderas,vulnerabilidades,barcos)//este es un buen caso inicial? o sería turno+1 ?
+	).reduce((a,b)=>a.concat(b),[])
+	turnos+=1//la version previa de esto era mejor!
+	
     }
-
+	//ESTO NO DETECTA REPETIDOS, HAY QYE HACER QUE SE REUNAN LOS QUE DESCIENDEN DEL MISMO ANTERIOR
     return partidas.filter((p)=>p.obtenerBarcosVivos()==0)
+    
 }
 
 
