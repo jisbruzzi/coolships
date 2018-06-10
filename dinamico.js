@@ -1,10 +1,10 @@
+const disparo = require("./disparo")
+const partida = require("./partida")
 //caso general
-function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
-    
-
+function mejoresPartidasGeneral(turno,disparoSiguiente,lanzaderas,vulnerabilidades,barcos){
     //obtener todas las alternativas posibles
     let alternativas = 
-    disparosPosibles(lanzaderas,barcos.length)
+    disparo.posibles(lanzaderas,barcos.length)
     .map(d=>
         mejoresPartidas(turno-1,d,lanzaderas,vulnerabilidades,barcos)
     )
@@ -15,7 +15,7 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     )
     //evaluar puntaje al agregar el disparo
     .map((a)=>
-        a.conDanios(vulnerabilidades.enTurno(turno),disparo)
+        a.conDanios(vulnerabilidades(turno),disparoSiguiente)
     )
 
     //quedarme con las alternativas no superadas
@@ -33,16 +33,16 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
 }
 
 //caso base
-let mejoresPartidasGeneral=mejoresPartidas
 function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     if(turno==0){
-        return partida(barcos,0)
+        return [partida(barcos,0)]
     }else{
         return mejoresPartidasGeneral(turno,disparo,lanzaderas,vulnerabilidades,barcos)
     }
 }
 
-//versión memoizada
+//versión memoizad
+/*a
 let mejoresPartidasNormal=mejoresPartidas
 let argsAnteriores={}
 function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
@@ -52,14 +52,17 @@ function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     }
     return argsAnteriores[args]
 }
+*/
 
 
 //interfaz
 function dinamico(lanzaderas,vulnerabilidades,barcos) {
     let t=0;
     let partidas=[]
+    let turnos=0
     while (partidas.length==0 || !partidas.some((p)=>p.obtenerBarcosVivos()==0)){
-        partidas=mejoresPartidas(turno,ningunDisparo(lanzaderas,barcos),lanzaderas,vulnerabilidades,barcos)//este es un buen caso inicial? o sería turno+1 ?
+        partidas=mejoresPartidas(turnos,disparo.vacio(barcos.length),lanzaderas,vulnerabilidades,barcos)//este es un buen caso inicial? o sería turno+1 ?
+	turnos+=1
     }
 
     return partidas.filter((p)=>p.obtenerBarcosVivos()==0)
