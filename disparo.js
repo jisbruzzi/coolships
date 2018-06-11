@@ -12,6 +12,9 @@ function disparo(arrayDeDisparos){
     o.dispara=function(v){
         return arrayDeDisparos[v]
     }
+    o.descripcion=function(){
+        return arrayDeDisparos.concat([])
+    }
     return o;
 }
 

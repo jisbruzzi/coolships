@@ -5,7 +5,10 @@
   "main": "dinamico.js",
   "dependencies": {
     "babel": "^6.23.0",
-    "chai": "^4.1.2"
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "formidable": "^1.2.1",
+    "socket.io": "^2.1.1"
   },
   "devDependencies": {
     "mocha": "^5.2.0"

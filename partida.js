@@ -1,4 +1,4 @@
-function partida(barcos,puntajeAcumulado,anterior=null){
+function partida(barcos,puntajeAcumulado,anterior=null,disparoAnterior=null){
     let o={}
     o.conDanios=function(danioEn,disparo){
         return partida(barcos.map((b,i)=>{
@@ -7,7 +7,7 @@ function partida(barcos,puntajeAcumulado,anterior=null){
             }else{
                 return b
             }
-        }), o.obtenerPuntaje(),o)
+        }), o.obtenerPuntaje(),o,disparo)
     }
     o.obtenerBarcosVivos=function(){
         return barcos.map(b=>{
@@ -21,21 +21,27 @@ function partida(barcos,puntajeAcumulado,anterior=null){
         },0)
     }
     o.obtenerPuntaje=function(){
-	return o.obtenerBarcosVivos()+puntajeAcumulado;
+	    return o.obtenerBarcosVivos()+puntajeAcumulado;
     }
     o.obtenerHistorial=function(){
-	let miHistorial={
-		barcos:barcos.map((b)=>b.obtenerSalud()),
-		puntaje:o.obtenerPuntaje()
-	}
-	if(anterior==null){
-		return [miHistorial]
-	}else{
-		return anterior.obtenerHistorial().concat([miHistorial])
-	}
+        let descripcionDisparo=[]
+        if (disparoAnterior!=null){
+            descripcionDisparo=disparoAnterior.descripcion()
+
+        }
+        let miHistorial={
+            barcos:barcos.map((b)=>b.obtenerSalud()),
+            puntaje:o.obtenerPuntaje(),
+            disparo:descripcionDisparo
+        }
+        if(anterior==null){
+            return [miHistorial]
+        }else{
+            return anterior.obtenerHistorial().concat([miHistorial])
+        }
     }
     o.obtenerAnterior=function(){
-	return anterior
+	    return anterior
     }
     return o
 }

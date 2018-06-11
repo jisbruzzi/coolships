@@ -3,11 +3,10 @@ const partida = require("./partida")
 //caso general
 function mejoresPartidasGeneral(turno,disparoSiguiente,lanzaderas,vulnerabilidades,barcos){
     //obtener todas las alternativas posibles
-    console.log(disparo.posibles(lanzaderas,barcos.length).length)
     let alternativas = 
     disparo.posibles(lanzaderas,barcos.length)
     .map(d=>
-        mejoresPartidas(turno-1,d,lanzaderas,vulnerabilidades,barcos)
+        mejoresPartidasMemoizada(turno-1,d,lanzaderas,vulnerabilidades,barcos)
     )
     .reduce(
         (x,y)=>
@@ -30,35 +29,31 @@ function mejoresPartidasGeneral(turno,disparoSiguiente,lanzaderas,vulnerabilidad
             mejores.push(a)
         }
     }
-	/*
-    for(let m of mejores){
-	console.log(m.obtenerHistorial())
-    }
-    */
     return mejores
 }
 
 //caso base
-function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
+function mejoresPartidasConBase(turno,disparo,lanzaderas,vulnerabilidades,barcos){
     if(turno==0){
-        return [partida(barcos,0)]
+        return [partida(barcos,0).conDanios(vulnerabilidades(turno),disparo)]
     }else{
         return mejoresPartidasGeneral(turno,disparo,lanzaderas,vulnerabilidades,barcos)
     }
 }
 
-//versión memoizad
-/*a
-let mejoresPartidasNormal=mejoresPartidas
-let argsAnteriores={}
-function mejoresPartidas(turno,disparo,lanzaderas,vulnerabilidades,barcos){
-    let args=JSON.stringify({turno,disparo,lanzaderas,vulnerabilidades,barcos})
-    if(! argsAnteriores[args]){
-        argsAnteriores[args]=mejoresPartidasNormal(turno,disparo,lanzaderas,vulnerabilidades,barcos)
+//versión memoizada
+var map=new Map()
+function mejoresPartidasMemoizada(turno,disparo,lanzaderas,vulnerabilidades,barcos){
+    let llamada=[turno,disparo.descripcion(),lanzaderas,vulnerabilidades.descripcion(),barcos.map((b)=>b.obtenerSalud())].toString()
+    if(map.has(llamada)){
+        return map.get(llamada)
+    }else{
+        let resultado=mejoresPartidasConBase(turno,disparo,lanzaderas,vulnerabilidades,barcos)
+        map.set(llamada,resultado)
+        return resultado
     }
-    return argsAnteriores[args]
+
 }
-*/
 
 
 //interfaz
@@ -68,14 +63,10 @@ function dinamico(lanzaderas,vulnerabilidades,barcos) {
     let partidasAnteriores=[]
     let turnos=0
     while (partidas.length==0 || !partidas.some((p)=>p.obtenerBarcosVivos()==0)){
-	partidasAnteriores=partidas
-        partidas=disparo.posibles(lanzaderas,barcos.length).map((d)=>
-		mejoresPartidas(turnos,d,lanzaderas,vulnerabilidades,barcos)//este es un buen caso inicial? o sería turno+1 ?
-	).reduce((a,b)=>a.concat(b),[])
-	turnos+=1//la version previa de esto era mejor!
-	
+        partidas=mejoresPartidasMemoizada(turnos,disparo.vacio(barcos.length),lanzaderas,vulnerabilidades,barcos)
+	    turnos+=1
     }
-	//ESTO NO DETECTA REPETIDOS, HAY QYE HACER QUE SE REUNAN LOS QUE DESCIENDEN DEL MISMO ANTERIOR
+    
     return partidas.filter((p)=>p.obtenerBarcosVivos()==0)
     
 }
