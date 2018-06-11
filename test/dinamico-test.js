@@ -49,8 +49,6 @@ describe("Dinamico llega a alguna solucion",function(){
 		let b=[barco(10),barco(10,2)]
 		let partidas=dinamico(1,v,b)
 		
-		
-		console.log(partidas[0].obtenerHistorial())
 		assert.equal(3,partidas[0].obtenerPuntaje())
 		assert.equal(1,partidas.length)
 	})
