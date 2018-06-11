@@ -3,7 +3,7 @@ function partida(barcos,puntajeAcumulado,anterior=null,disparoAnterior=null){
     o.conDanios=function(danioEn,disparo){
         return partida(barcos.map((b,i)=>{
             if(disparo.dispara(i)){
-                return b.conDanio(danioEn(i,b.obtenerPosicion()))
+                return b.conDanio(danioEn(i))
             }else{
                 return b
             }

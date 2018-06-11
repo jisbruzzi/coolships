@@ -4,7 +4,7 @@ function barco(vida,posicion=0){
 		return vida >0;
 	}
 	o.conDanio=function(danio){
-		return barco(vida-danio,posicion)
+		return barco(vida-danio(posicion),posicion)
 	}
 	o.obtenerSalud=function(){
 		return vida
