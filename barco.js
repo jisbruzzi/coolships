@@ -12,6 +12,9 @@ function barco(vida,posicion=0){
 	o.obtenerPosicion=function(){
 		return posicion
 	}
+	o.desplazado=function(dx){
+		return barco(vida,posicion+dx)
+	}
 	return o
 }
 module.exports=barco
