@@ -9,7 +9,7 @@ function mejorDesplazamientoGreedy(barco,danios){
     let mejorSupervivencia=0
     let mejorPosicion=-1
     for(let i=0;i<danios.tamanio();i+=1){
-        let supervivenciaI=supervivencia(barco.desplazado(i),danios)
+        let supervivenciaI=barco.desplazado(i).supervivenciaMinima(danios)
         if(supervivenciaI>mejorSupervivencia || mejorPosicion==-1){
             mejorSupervivencia=supervivenciaI
             mejorPosicion=i
@@ -17,15 +17,6 @@ function mejorDesplazamientoGreedy(barco,danios){
     }
     
     return mejorPosicion
-}
-
-function supervivencia(barco,danios){
-    let desplazado=barco.conDanio(danios).desplazado(1)
-    if(desplazado.vive()){
-        return 1 + supervivencia(desplazado,danios)
-    }else{
-        return 0
-    }
 }
 
 module.exports=posicionadosGreedy

@@ -9,6 +9,9 @@ function partida(barcos,puntajeAcumulado,anterior=null,disparoAnterior=null){
             }
         }), o.obtenerPuntaje(),o,disparo)
     }
+    o.impactaVivos=function(disparo){
+        return barcos.map((b,i)=>disparo.dispara(i) && b.vive()).reduce((a,b)=>a||b,false)
+    }
     o.obtenerBarcosVivos=function(){
         return barcos.map(b=>{
             if(b.vive()){
@@ -43,6 +46,9 @@ function partida(barcos,puntajeAcumulado,anterior=null,disparoAnterior=null){
     }
     o.obtenerAnterior=function(){
 	    return anterior
+    }
+    o.mejorPuntajePosible=function(danioEn){
+        return o.obtenerPuntaje()+barcos.map((b)=>b.supervivenciaMinima(danioEn)).reduce((a,b)=>a+b,0)
     }
     return o
 }
