@@ -44,4 +44,14 @@ describe("Dinamico llega a alguna solucion",function(){
 		assert.equal(3,partidas[0].obtenerPuntaje())
 		assert.equal(2,partidas.length)
 	})
+	it("Barcos desplazados",function(){
+		let v=vulnerabilidades([[10],[1],[1],[10]])
+		let b=[barco(10),barco(10,2)]
+		let partidas=dinamico(1,v,b)
+		
+		
+		console.log(partidas[0].obtenerHistorial())
+		assert.equal(3,partidas[0].obtenerPuntaje())
+		assert.equal(1,partidas.length)
+	})
 })

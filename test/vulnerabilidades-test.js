@@ -12,6 +12,12 @@ describe("Probar la creacion de ocultamiento de vulnerabilidades",function(){
         assert.equal(v(0)(2),4)
         assert.equal(v(0)(3),5)
 
+        //fila 0, desplaza 1
+        assert.equal(v(0)(0,1),4)
+        assert.equal(v(0)(1,1),5)
+        assert.equal(v(0)(2,1),4)
+        assert.equal(v(0)(3,1),5)
+
         //fila 1
         assert.equal(v(1)(0),4)
         assert.equal(v(1)(1),5)
@@ -33,6 +39,11 @@ describe("Probar la creacion de ocultamiento de vulnerabilidades",function(){
         assert.equal(v(1)(0),8)
         assert.equal(v(2)(0),15)
 
+        //barco 0 
+        assert.equal(v(0)(0,300),4)
+        assert.equal(v(1)(0,300),8)
+        assert.equal(v(2)(0,300),15)
+
         //barco 15
         assert.equal(v(0)(15),4)
         assert.equal(v(1)(15),8)
@@ -48,6 +59,12 @@ describe("Probar la creacion de ocultamiento de vulnerabilidades",function(){
         assert.equal(v(0)(1),1)
         assert.equal(v(0)(2),0)
         assert.equal(v(0)(3),1)
+
+        //fila 0, desplazado 1
+        assert.equal(v(0)(0,1),7)
+        assert.equal(v(0)(1,1),8)
+        assert.equal(v(0)(2,1),7)
+        assert.equal(v(0)(3,1),8)
 
         //fila 1
         assert.equal(v(1)(0),7)

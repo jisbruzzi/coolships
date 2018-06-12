@@ -15,7 +15,7 @@ function mejoresPartidasGeneral(turno,disparoSiguiente,lanzaderas,vulnerabilidad
     )
     //evaluar puntaje al agregar el disparo
     .map((a)=>
-        a.conDanios(vulnerabilidades(turno),disparoSiguiente)
+            a.conDanios(vulnerabilidades(turno),disparoSiguiente)
     )
 
     //quedarme con las alternativas no superadas

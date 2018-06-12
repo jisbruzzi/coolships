@@ -25,6 +25,8 @@ describe("Partidas",function(){
         assert.equal(p.obtenerBarcosVivos(),0)
     })
 
+    
+
     it("Muere la mitad, porque la mitad se dispara",function(){
         let barcos=[
             barco(1),
@@ -83,6 +85,34 @@ describe("Partidas",function(){
         p=p.conDanios(v(0),disparo.completo(4))
         assert.equal(p.obtenerPuntaje(),7)
         assert.equal(p.obtenerBarcosVivos(),2)
+
+        p=p.conDanios(v(0),disparo.completo(4))
+        assert.equal(p.obtenerPuntaje(),7)
+        assert.equal(p.obtenerBarcosVivos(),0)
+    })
+
+    it("Mueren todos salvo el desplazado",function(){
+        let barcos=[
+            barco(5,1),
+            barco(5),
+            barco(5),
+            barco(5)
+        ]
+        let v=vulnerabilidades([
+            [10],[2],
+        ])
+
+        let p=partida(barcos,1)
+        assert.equal(p.obtenerPuntaje(),5)
+        assert.equal(p.obtenerBarcosVivos(),4)
+        
+        p=p.conDanios(v(0),disparo.completo(4))
+        assert.equal(p.obtenerPuntaje(),6)
+        assert.equal(p.obtenerBarcosVivos(),1)
+
+        p=p.conDanios(v(0),disparo.completo(4))
+        assert.equal(p.obtenerPuntaje(),7)
+        assert.equal(p.obtenerBarcosVivos(),1)
 
         p=p.conDanios(v(0),disparo.completo(4))
         assert.equal(p.obtenerPuntaje(),7)

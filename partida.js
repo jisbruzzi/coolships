@@ -3,7 +3,7 @@ function partida(barcos,puntajeAcumulado,anterior=null,disparoAnterior=null){
     o.conDanios=function(danioEn,disparo){
         return partida(barcos.map((b,i)=>{
             if(disparo.dispara(i)){
-                return b.conDanio(danioEn(i))
+                return b.conDanio(danioEn(i,b.obtenerPosicion()))
             }else{
                 return b
             }
@@ -30,9 +30,10 @@ function partida(barcos,puntajeAcumulado,anterior=null,disparoAnterior=null){
 
         }
         let miHistorial={
-            barcos:barcos.map((b)=>b.obtenerSalud()),
-            puntaje:o.obtenerPuntaje(),
-            disparo:descripcionDisparo
+            ba:barcos.map((b)=>b.obtenerSalud()),
+            pos:barcos.map((b)=>b.obtenerPosicion()),
+            pun:o.obtenerPuntaje(),
+            disp:descripcionDisparo
         }
         if(anterior==null){
             return [miHistorial]

@@ -57,14 +57,6 @@ function readFile(path){
   const rl = readline.createInterface({                                         
     input: fs.createReadStream(path)                                            
   });                                                                           
-                                                                                
-/*
-  var lines = require('fs').readFileSync(path, 'utf-8')                         
-    .split('\n');
-                                                                                   
-  var line;                                                                        
-  for(line in lines){                                                              
-*/
 	rl.on('line', (line) => {
     var splitValues = line.split(' ');                                             
     ships.push(splitValues.shift());                                               
