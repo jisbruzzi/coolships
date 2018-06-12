@@ -1,6 +1,6 @@
 function posicionadosGreedy(vulnerabilidades,barcos){
     return barcos.map((b,i)=>{
-        let desp = mejorDesplazamientoGreedy(barco,vulnerabilidades(0)(i))
+        let desp = mejorDesplazamientoGreedy(b,vulnerabilidades(0)(i))
         return b.desplazado(desp)
     })
 }
@@ -9,23 +9,26 @@ function mejorDesplazamientoGreedy(barco,danios){
     let mejorSupervivencia=0
     let mejorPosicion=-1
     for(let i=0;i<danios.tamanio();i+=1){
-        let supervivencia=supervivencia(barco.desplazado(i),danios)
-        if(mejorSupervivencia<supervivencia || mejorPosicion==-1){
-            mejorSupervivencia=supervivencia
+        let supervivenciaI=supervivencia(barco.desplazado(i),danios)
+        if(supervivenciaI>mejorSupervivencia || mejorPosicion==-1){
+            mejorSupervivencia=supervivenciaI
             mejorPosicion=i
         }
     }
+    
     return mejorPosicion
 }
 
 function supervivencia(barco,danios){
-    let desplazado=barco.desplazado(1).conDanios(danios)
+    let desplazado=barco.conDanio(danios).desplazado(1)
     if(desplazado.vive()){
         return 1 + supervivencia(desplazado,danios)
     }else{
         return 0
     }
 }
+
+module.exports=posicionadosGreedy
 
 /*
 function getStartPositions(){                                                      

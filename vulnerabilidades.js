@@ -1,11 +1,15 @@
 function ocultadorDeVulnerabilidades(arrayDeArrays){
     let fDeTurno = function deTurno(turno){
         return function deBarco(barco){
-            return function conDesplazamiento(desplazamiento){
+            let fConDesplazamiento= function conDesplazamiento(desplazamiento){
                 //console.log((turno+desplazamiento),barco)
                 let filaElegida=arrayDeArrays[(turno+desplazamiento) % arrayDeArrays.length]
                 return filaElegida[barco % filaElegida.length]
             }
+            fConDesplazamiento.tamanio=function(){
+                return arrayDeArrays.length
+            }
+            return fConDesplazamiento
         }
     }
     fDeTurno.descripcion=function(){
