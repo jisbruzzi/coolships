@@ -52,4 +52,22 @@ describe("Dinamico llega a alguna solucion",function(){
 		assert.equal(3,partidas[0].obtenerPuntaje())
 		assert.equal(1,partidas.length)
 	})
+
+	it("Contraejemplo del informe",function(){
+		let u = [1,1]
+		let unos=[]
+		for(let i=0;i<10;i+=1){
+			unos.push(u)
+		}
+		let v=vulnerabilidades([[9,1]].concat(unos))
+		let b=[barco(10),barco(1)]
+		let partidas=dinamico(1,v,b)
+
+		for(let p of partidas){
+			console.log(p.obtenerHistorial())
+		}
+		
+		assert.equal(12,partidas[0].obtenerPuntaje())
+		assert.equal(1,partidas.length)
+	})
 })

@@ -1,0 +1,76 @@
+\part{Dinamico}
+\section{Explicación del algoritmo}
+
+Pseudocódigo:
+
+´´´
+mejoresPartidas(t,d):
+    if t=0:
+        return partida sin disparos
+
+    alternativas := U (d' in disparos posibles) mejoresPartidas(t-1,d')
+    alternativas daniadas=partidas con danio(d,alternativas)
+    mejor_puntaje := max_(a in alternativas){puntaje(a)}
+    mejores_alternativas := {a in alternativas/puntaje(a)=mejorPuntaje}
+    return mejores_alternativas
+´´´
+
+El algoritmo pretende devolver la lista de las mejores partidas posibles que se resuelvan en t turnos y que terminen con el disparo d, sin embargo, no lo logra. Devuelve las mejores partidas posibles al aplicarles el disparo d a cada una de las mejores partidas posibles en t-1 turnos.
+
+En la implementación javascript, los hiperparámetros del algoritmo (es decir, el tablero, la cantidad de lanzaderas, la cantidad de barcos y los puntos de vida de cada uno) también se pasan como argumentos.
+
+El algoritmo se construyó teniendo en cuenta la siguiente función de minimización:------------ TODO --------
+
+\section{Calidad de heurística de Dinámico}
+
+Dinamico no conforma un algoritmo de resolución de la situación planteada, sino una heurística. Esto se demuestra por medio del siguiente contraejemplo.
+
+\begin{center}
+\begin{tabular}{ c | c c c c c}
+Hay una sola lanzadera.
+\hline
+V_i & t1 & t2 & t3 & t4 & t5
+\hline
+10    &  9 &  1 &  1 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 10 \\
+1     &  1 &  1 &  1 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 10
+\end{tabular}
+\end{center}
+
+En la solución mínima, el barco de vida 10 recibe un disparo en el primer turno, aprovechándose de esta forma el gran daño que puede recibir; y el puntaje alcanzado es 5. Sin embargo, debido a que Dinámico es una heurística que aplica un criterio de greedy para determinar la mejor decisión por turno, determina que la mejor decisión para el primer turno es la que lleve a un mejor puntaje, es decir, disparar al barco de salud 1 primero y al de salud 10 después. Así, el puntaje mínimo alcanzado por Dinámico será 11.
+
+\section{Complejidad temporal del algoritmo}
+
+El algoritmo Dinamico es memoizado. Como sus únicos parámetros son t y d, su complejidad temporal será lineal respecto de los valores que puede tomar cada uno de sus parámetros. En memoria, se generará una tabla como la siguiente:
+\begin{center}
+\begin{tabular}{c | c c c c}
+turno & disparo posible 1 & disparo posible 2 & disparo posible 3 & ...
+\hline
+t_0 & & & & \\
+t_1 & & & & \\
+t_2 & & & & \\
+t_3 & & & & \\
+t_4 & & & & \\
+t_5 & & & & \\
+... & & & &
+\end{tabular}
+\end{center}
+El costo añadido de computar la solución en cada "casilla" de la tabla es lineal al costo de obtener el puntaje de cada partida alternativa, y por lo tanto a la cantidad de partidas alternativas. Por otro lado, el costo de computar el puntaje de cada partida alternativa es lineal con la cantidad de barcos (ya que es necesario determinar si cada uno de ellos está vivo en la misma). Así, el costo del algoritmo memoizado para resolver mejoresPartidas(t,d)=O(t*disparos posibles*costo de cada casillero)=O(t*disparos posibles*disparos posibles*costo de obtener puntaje de una partida)=O(t*disparos posibles*disparos posibles*barcos)=O(t*disparos posibles^2*barcos) .
+
+\section{Condiciones para que Dinámico sea óptimo}
+Dinámico será óptimo cuando la mejor decisión posible en cada turno sea la que más barcos mate en ese turno. Esto sólo puede darse cuando las vulnerabilidades relacionadas a cada barco solamente ascienden a lo largo de la partida, cuando el tablero no es "rotatorio", tal como fue el planteo dado, es necesario asegurar también que ninguna partida dura tantos turnos como columnas del tablero. A continuación se demuestra esta afirmación para un tablero infinito, sin repeticiones.
+
+\subsection{Planteo matemático de la hipótesis}
+
+Sea v una función N^2->R^+ tal que v(t,b) representa la vulnerabilidad correspondiente al turno t y al barco b. Sea d(t,b) una función N^2->{1,0} que indica 1 si se dispara al barco b en el turno t. Sea D el conjunto de todas las funciones d posibles, tales que cumplen suma para b desde 1 hasta B d(t,b) = L para todo t, con B la cantidad de barcos y L la cantidad de lanzaderas. Sea h(t,b)=v(t,b)*d(t,b)+h(t-1,b) si t>0, V_b si t=0. sea H(t,b)=0 si h(t,b)<=0, 1 en caso contrario.
+
+En t se da un disparo greedy sii d* en D es tal que suma para b desde 1 hasta B H(t,b) es el mínimo posible.
+Una partida d* en D con un algoritmo greedy es aquella tal que los turnos 0 a T se dan de forma greedy.
+
+\subsubsection{Hipótesis}
+v(t+1,b)>=v(t,b) para todo t<T,b, usando d y d es una partida con un algoritmo greedy => p(d,v,v_b) = min (para todo d en D) {p(d,v,v_b)} 
+
+\subsubsection{Demostración}
+Por inducción:
+con T=0:
+Matar de una forma distinta va a generar menos muertes, entonces esta es la manera correcta de matar.
+

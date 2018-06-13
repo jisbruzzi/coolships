@@ -36,7 +36,6 @@ function obtenerMejoresDesde(partida,turno,vulnerabilidades,disparosPosibles){
         }
     }
 
-
     return mejores.map((a)=>{
         return obtenerMejoresDesde(a,turno+1,vulnerabilidades,disparosPosibles)
     }).reduce((a,b)=>a.concat(b),[])
