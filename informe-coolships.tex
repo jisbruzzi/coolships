@@ -1,3 +1,75 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+\usepackage{pdfpages}
+\usepackage{geometry}
+% to install algorithm2e pckg: sudo apt-get install texlive-science
+\usepackage[ruled, vlined, nofillcomment]{algorithm2e}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{framed}
+
+\geometry{
+    a4paper,
+    margin=1.2in
+}
+
+\title{75.29 - Teoría de Algoritmos I: Trabajo Práctico n. 2}
+\author{
+    \\\\\\\\
+    \Large{Equipo Q:}\\
+    Lavandeira, Lucas (\texttt{\#98042})\\\texttt{lucaslavandeira@gmail.com}\\
+    \\
+    Rozanec, Matias (\texttt{\#97404})\\\texttt{rozanecm@gmail.com}\\
+    \\
+    Sbruzzi, José (\texttt{\#97452})\\\texttt{jose.sbru@gmail.com}\\
+    \\\\\\\\\\\\\\
+}
+\date{14.mayo.2018}
+
+\begin{document}
+\maketitle
+\begin{figure}[!htp]
+    \centering
+    \includegraphics[scale=1]{res/fiuba_logo.png} 
+\end{figure}
+\begin{center}\normalsize{Facultad de Ingeniería, Universidad de Buenos Aires}\end{center}
+\newpage
+
+\tableofcontents
+\newpage
+
+% *** RESOLUCION ***
+% Some settings for coding style
+\lstset{
+    basicstyle=\linespread{0.9}\ttfamily\footnotesize,
+    frame=single,
+    frameround=tttt,
+    numbers=left,
+    numberstyle=\tiny,
+    linewidth=14cm,
+    literate=
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+      {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+      {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+      {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+      {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+      {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+      {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+      {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+      {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+      {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+}
+
+
+
+
 \part{Dinamico}
 \section{Explicación del algoritmo}
 
@@ -59,18 +131,119 @@ El costo añadido de computar la solución en cada "casilla" de la tabla es line
 \section{Condiciones para que Dinámico sea óptimo}
 Dinámico será óptimo cuando la mejor decisión posible en cada turno sea la que más barcos mate en ese turno. Esto sólo puede darse cuando las vulnerabilidades relacionadas a cada barco solamente ascienden a lo largo de la partida, cuando el tablero no es "rotatorio", tal como fue el planteo dado, es necesario asegurar también que ninguna partida dura tantos turnos como columnas del tablero. A continuación se demuestra esta afirmación para un tablero infinito, sin repeticiones.
 
-\subsection{Planteo matemático de la hipótesis}
+\subsection{Planteo matemático de la hipótesis y demostración}
 
-Sea v una función N^2->R^+ tal que v(t,b) representa la vulnerabilidad correspondiente al turno t y al barco b. Sea d(t,b) una función N^2->{1,0} que indica 1 si se dispara al barco b en el turno t. Sea D el conjunto de todas las funciones d posibles, tales que cumplen suma para b desde 1 hasta B d(t,b) = L para todo t, con B la cantidad de barcos y L la cantidad de lanzaderas. Sea h(t,b)=v(t,b)*d(t,b)+h(t-1,b) si t>0, V_b si t=0. sea H(t,b)=0 si h(t,b)<=0, 1 en caso contrario.
+\subsubsection{Conceptos necesarios para expresar la hipótesis y la prueba}
 
-En t se da un disparo greedy sii d* en D es tal que suma para b desde 1 hasta B H(t,b) es el mínimo posible.
-Una partida d* en D con un algoritmo greedy es aquella tal que los turnos 0 a T se dan de forma greedy.
+Sea $v(t,b)$ la vulnerabilidad del barco $t$ en el turno $b$, con $t\geq0$ y $1\geq b \geq B$, siendo $B$ la cantidad de barcos.
+Sea $d(t,b)$ una función tal que
+
+\[
+    d(t,b)=
+    \begin{cases}
+        1 & \text{si se dispara al barco $b$ en el turno $t$} \\
+        0 & \text{en otro caso}
+    \end{cases}
+\]
+Y sea $D$ el conjunto de todos los disparos $d$ que cumplen que:
+$$ \sum_{b=1}^{B} d(t,b) = L  \forall t \geq 0 $$
+
+Sea $h_{d,v} (t,b)$ una función que representa la salud del barco $b$ en el turno $t$, al usar los disparos $d$ y las vulnerabilidades $v$:
+\[
+    h_{d,v}(t,b)=
+    \begin{cases}
+        h(t-1,b)-v(t,b) \cdot d(t,b) & \text{si $t>0$} \\
+        V_b & \text{si t=0}
+    \end{cases}
+\]
+Siendo $V_b$ la salud inicial de cada barco. Sea $H_{d,v}(b,t)$ una función que indica si el barco $b$ vive en el turno $t$, usando los disparos $d$ y las vulnerabilidades $v$.
+\[
+    H_{d,v}(t,b)=
+    \begin{cases}
+        1 & \text{si $h_{d,v}(t,b)>0$} \\
+        0 & \text{en caso contrario}
+    \end{cases}
+\]
+
+Y sea también $H_{d,v}(t)$ tal que: $$H_{d,v}(t)=\sum_{b=1}^{B} H_{d,v}(t,b)$$
+
+Sea la función $G(d,v,t)$ que indica si en el turno $t$, el disparo $d$ representa una formado por medio de la estrategia greedy, que consiste en elegir el disparo que destruya más barcos:
+\[
+    G(d,v,t)=
+    \begin{cases}
+        1 & \text{si $h_{d,v}(t)=min_{d' \in D} \left \{ H_{d',v}(t) \right \} $} \\
+        0 & \text{si no}
+    \end{cases}
+\]
+
+Sea la función $G*(d,v,t)$ que representa si los disparos de todos los turnos hasta $t$ fueron greedy:
+\[
+    G^*(d,v,t)=
+    \begin{cases}
+        G(d,v,t) \cdot G^*(d,v,t-1) & \text{si $T>0$} \\
+        1 & \text{si $T=0$}
+    \end{cases}
+\]
+
+Sea la función $P_{d,v}(t)$ la cantidad de puntos acumulados hastael turno $t$ al usar el disparo $d$ y las vulnerabilidades $v$:
+\[
+    P_{d,v}(t)=
+    \begin{cases}
+        H_{d,v}(t) + P_{d,v}(t-1) & \text{si $t>0$} \\
+        0 & \text{si $t=0$}
+    \end{cases}
+\]
+
 
 \subsubsection{Hipótesis}
-v(t+1,b)>=v(t,b) para todo t<T,b, usando d y d es una partida con un algoritmo greedy => p(d,v,v_b) = min (para todo d en D) {p(d,v,v_b)} 
+\begin{framed}
+Para cualquier $T$ natural mayor a 0 se cumple que: \newline
+Dado $v$ tal que: 
+$$ v(t+1,b) 
+\geq 
+v(t,b) \forall 0 \leq t \leq T, 1 \leq b \leq B $$
+Y dado $d$ tal que: $$G^*(d,v,T)=1$$
+Entonces: $$P_{d,v}(T)=min_{d' \in D} \left \{ P_{d',v}(T) \right \}$$
+\end{framed}
 
-\subsubsection{Demostración}
-Por inducción:
-con T=0:
-Matar de una forma distinta va a generar menos muertes, entonces esta es la manera correcta de matar.
+\subsubsection{Demostración: caso base}
+Para $T=0$ la hipótesis es verdadera porque $P_{d,v}(T)=0 \forall d,v$.
+
+
+\subsubsection{Planteo del caso inductivo}
+Para $T > 0$, tenemos que se cumple para $T-1$ que:
+\begin{framed}
+Dado $v$ tal que: $$ v(t+1,b) \geq v(t,b) \forall 0 \leq t \leq T-1, 1 \leq b \leq B $$
+Y dado $d$ tal que: $$G^*(d,v,T-1)=1$$
+Entonces: $$P_{d,v}(T-1)=min_{d' \in D} \left \{ P_{d',v}(T-1) \right \}$$
+\end{framed}
+A partir de esa proposición, queremos probar que teniendo:
+\begin{framed}
+Dado $v$ tal que: $$ v(t+1,b) \geq v(t,b) \forall 0 \leq t \leq T, 1 \leq b \leq B $$
+Y dado $d$ tal que: $$G^*(d,v,T)=1$$
+\end{framed}
+Podemos concluir que: $$P_{d,v}(T)=min_{d' \in D} \left \{ P_{d',v}(T) \right \}$$
+
+\subsubsection{Demostración del caso inductivo}
+Por la definición de $P$: $$P_{d,v}(T)=H_{d,v}(T)+P_{d,v}(T-1)$$
+Por la hipótesis inductiva, que afirma que $P_{d,v}(T-1)=min_{d^* \in D}\left \{ P_{d^*,v}(T-1) \right \}$ podemos definir que:
+$$P_{d,v}(T)=H_{d,v}(T)+min_{d^* \in D}\left \{ P_{d^*,v}(T-1) \right \}$$
+
+Debido a que: $$G^*(d,v,T)=1 \Rightarrow G(d,v,T)=1 \Rightarrow H_{d,v}(T)=min_{d' \in D} \left \{ H_{d',v}(T) \right \}$$
+Podemos concluir, combinando estas últimas dos proposiciones, que:
+$$P_{d,v}(T)=min_{d' \in D} \left \{ H_{d',v}(T) \right \}+min_{d^* \in D}\left \{ P_{d^*,v}(T-1) \right \}$$
+
+Una manera alternativa de definir $P_{d,v}(t)$ es:$$P_{d,v}(t)=\sum_{i=1}^{t} H_{d,v}(i)$$
+
+Agregando esta definición a la proposición anterior tenemos que:
+
+$$P_{d,v}(T)=min_{d' \in D} \left \{ H_{d',v}(T) \right \}+min_{d^* \in D}\left \{ \sum_{i=1}^{T-1} H_{d^*,v}(i) \right \}$$
+Debido a que los disparos $d$ en cada uno de los turnos son independientes, y la minimización tiene en cuenta sólo la efectividad de cada turno:
+$$P_{d,v}(T)=min_{d' \in D} \left \{ H_{d',v}(T) \right \}+\sum_{i=1}^{T-1} min_{d^* \in D}\left \{  H_{d^*,v}(i) \right \}$$
+
+$$P_{d,v}(T)=\sum_{i=1}^{T} min_{d^* \in D}\left \{  H_{d^*,v}(i) \right \}$$
+
+Teniendo en cuenta la independencia de los disparos en cada uno de los turnos citada anteriormente, consecuencia de la condición impuesta sobre $v$, que implica que cualquier barco que podría haber sido destruído en cierto turno puede ser destruído en el siguiente, podemos concluir que:
+$$P_{d,v}(T)=min_{d'' \in D}\left \{ \sum_{i=1}^{T} H_{d'',v}(i) \right \}$$
+Lo cual concluye la demostración.
 
