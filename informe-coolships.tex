@@ -95,17 +95,15 @@ El algoritmo pretende devolver la lista de las mejores partidas posibles que se 
 
 En la implementación javascript, los hiperparámetros del algoritmo (es decir, el tablero, la cantidad de lanzaderas, la cantidad de barcos y los puntos de vida de cada uno) también se pasan como argumentos.
 
-El algoritmo se construyó teniendo en cuenta la siguiente función de minimización:------------ TODO --------
-
 \section{Calidad de heurística de Dinámico}
 
 Dinamico no conforma un algoritmo de resolución de la situación planteada, sino una heurística. Esto se demuestra por medio del siguiente contraejemplo.
 
 \begin{center}
-\begin{tabular}{ c | c c c c c}
-Hay una sola lanzadera.
+\begin{tabular}{ c | c c c c c c c c c c c c c}
+Hay una sola lanzadera. \\
 \hline
-V_i & t1 & t2 & t3 & t4 & t5
+V_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 \hline
 10    &  9 &  1 &  1 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 10 \\
 1     &  1 &  1 &  1 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 10
@@ -251,3 +249,70 @@ Teniendo en cuenta la independencia de los disparos en cada uno de los turnos ci
 $$P_{d,v}(T)=min_{d'' \in D}\left \{ \sum_{i=1}^{T} H_{d'',v}(i) \right \}$$
 Lo cual concluye la demostración.
 
+\part{Greedo}
+
+\section{Explicación del algoritmo}
+
+\begin{algorithm}
+\caption{obtenerMejor(p)}
+\KwData{Partida inicial a mejorar $p$}
+\KwResult{La mejor partida que puede obtener el algoritmo}
+    $p \leftarrow \text{Partida a mejorar}$ \\
+    \If{$barcosVivos(p)=0$}{
+        \KwRet{$p$}
+    }\Else{
+        $D' \leftarrow \{ d \in D / \text{ $d$ impacta barcos vivos de $p$ }\}$ \\
+        $P \leftarrow$ conDisparo($D'$,$p$)\\
+        $p^* \leftarrow$ una de las partidas con el menor puntaje posible de $P$ \\
+        \KwRet{ $obtenerMejor(p^*)$ }
+    }
+\end{algorithm}
+
+En el caso del algoritmo Greedy, para elegir el mejor disparo se utilizó una heurística más efectiva que para la solución dinámica. Greedo evalúa según el mejor puntaje posible a cada paso. Este puntaje se obtiene suponiendo que en todos los turnos siguientes se dispone de tantas lanzaderas como barcos. Así, al intentar maximizar el mejor puntaje posible en vez del puntaje actual, Greedo no prioriza el disparo que más barcos mate sino el disparo que haga que la solución empeore lo menos posible.
+
+Para ponerlo en términos más sencillos, Greedo se pregunta, para cada barco \textit{Cuánto pierdo si no te disparo?} y evaluando eso define qué movimiento hacer a continuación.
+
+\section{Calidad de heurística de Greedo}
+A continuación se presenta un caso en el que el algoritmo Greedy falla.
+
+\begin{center}
+\begin{tabular}{ c | c c c c c c c c c c c c c}
+Hay una sola lanzadera. \\
+\hline
+V_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+\hline
+15    &  5 &  5 &  10 &  0.1 &  0.1 &  0.1 & 0.1 &  0.1 &  0.1 &  0.1 &  0.1 & 0.1  & 0.1 \\
+10    &  1 &  0 &  10 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 1
+\end{tabular}
+\end{center}
+
+En este caso, el algoritmo puede tomar dos decisiones distintas respecto del primer disparo: o bien dispararle al barco de salud 15 o bien al de salud 10. Ambas decisiones tienen la misma penalización, debido a que la misma está definida por el puntaje que se alcanzaría si se pudiera disparar 2 veces por turno y, al comenzar, ambos barcos serían dstruídos en la columna t3 según esta aproximación. La decisión desemboca en una de dos situaciones:
+
+\begin{center}
+\begin{tabular}{ c | c c c c c c c c c c c}
+Disparando inicialmente al barco de vida 15. Hay una sola lanzadera. \\
+\hline
+V_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+\hline
+5     &  10 &  0.1 &  0.1 &  0.1 & 0.1 &  0.1 &  0.1 &  0.1 &  0.1 & 0.1  & 0.1 \\
+10    &  10 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 1
+\end{tabular}
+\end{center}
+
+A partir de aquí, el algoritmo decide disparar al barco que ahora tiene vida 5, con lo cual, a partir de este turno, se alcanza un puntaje de 10 puntos. La alternativa es disparar al barco de vida 10, lo cual llevaría a un puntaje de 50 puntos.
+
+\begin{center}
+\begin{tabular}{ c | c c c c c c c c c c c}
+Disparando inicialmente al barco de vida 10. Hay una sola lanzadera. \\
+\hline
+V_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+\hline
+10    &  10 &  0.1 &  0.1 &  0.1 & 0.1 &  0.1 &  0.1 &  0.1 &  0.1 & 0.1  & 0.1 \\
+9     &  10 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 1
+\end{tabular}
+\end{center}
+
+A partir de aquí, el algoritmo decide disparar al barco que ahora tiene vida 10 (de lo contrarío obtendría un puntaje de 100), y alcanza una penalización de 9.\\
+
+Así, vemos que el algoritmo puede alcanzar situaciones subóptimas cuando encuentra que debería destruir más barcos de los que le es posible en la misma columna. El algoritmo Baco, codificado de forma similar a Greedo, postpone estas decisiones, devolviendo a cada paso las mejores soluciones posibles. Se incluyó en el código del trabajo práctico.
+\end{document}
