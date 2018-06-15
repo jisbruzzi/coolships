@@ -315,4 +315,9 @@ V_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 A partir de aquí, el algoritmo decide disparar al barco que ahora tiene vida 10 (de lo contrarío obtendría un puntaje de 100), y alcanza una penalización de 9.\\
 
 Así, vemos que el algoritmo puede alcanzar situaciones subóptimas cuando encuentra que debería destruir más barcos de los que le es posible en la misma columna. El algoritmo Baco, codificado de forma similar a Greedo, postpone estas decisiones, devolviendo a cada paso las mejores soluciones posibles. Se incluyó en el código del trabajo práctico.
+
+\Section{Condiciones para que Greedo sea óptimo}
+Greedo es óptimo cuando no se da la necesidad de tomar decisiones alternativas, es decir, cuando hay una única solución mejor.
+
+---------------- Acá habría que pobar que la solución óptima puede ser alcanzada por una serie de pasos Greedo y decir que Greedo sólo alcanza el óptimo cuando existe una sola de tales secuencias------------
 \end{document}
