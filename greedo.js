@@ -9,36 +9,35 @@ const disparo=require("./disparo")
  */
 function greedo(lanzaderas,vulnerabilidades,barcos){
     let inicial=partida(barcos,0)
-    return obtenerMejoresDesde(inicial,0,vulnerabilidades,disparo.posibles(lanzaderas,barcos.length))
+    return obtenerMejorDesde(inicial,0,vulnerabilidades,disparo.posibles(lanzaderas,barcos.length))
 }
 
 
-function obtenerMejoresDesde(partida,turno,vulnerabilidades,disparosPosibles){
+function obtenerMejorDesde(partida,turno,vulnerabilidades,disparosPosibles){
 
     if(partida.obtenerBarcosVivos()==0){
-        return [partida]
+        return partida
     }
 
-    let alternativas=disparosPosibles
+    let mejorPartida=disparosPosibles
     .filter((d)=>partida.impactaVivos(d))
     .map((d)=>partida.conDanios(vulnerabilidades(turno),d))
+    .map((p)=>{
+        return {
+            puntaje:p.mejorPuntajePosible(vulnerabilidades(turno)),
+            partida:p
+        }
+    })
+    .reduce((a,b)=>{
+        if(a.puntaje <= b.puntaje){
+            return a
+        }else{
+            return b
+        }
+    }).partida
     
     //quedarme con las alternativas no superadas COPY-PASTE DE dinamico.js. REFACTORIZAR?
-    let mejorPuntaje=0
-    let mejores=[]
-    for (let a of alternativas){
-        let mejorPuntajeA=a.mejorPuntajePosible(vulnerabilidades(turno))
-        if(mejores.length==0 || mejorPuntaje>mejorPuntajeA){
-            mejores=[a]
-            mejorPuntaje=mejorPuntajeA
-        }else if(mejorPuntaje==mejorPuntajeA){
-            mejores.push(a)
-        }
-    }
-
-    return mejores.map((a)=>{
-        return obtenerMejoresDesde(a,turno+1,vulnerabilidades,disparosPosibles)
-    }).reduce((a,b)=>a.concat(b),[])
+    return obtenerMejorDesde(mejorPartida,turno+1,vulnerabilidades,disparosPosibles)
 }
 
 module.exports=greedo

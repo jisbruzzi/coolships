@@ -11,6 +11,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{framed}
+\usepackage[ruled, vlined, nofillcomment]{algorithm2e}
 
 \geometry{
     a4paper,
@@ -73,19 +74,22 @@
 \part{Dinamico}
 \section{Explicación del algoritmo}
 
-Pseudocódigo:
-
-´´´
-mejoresPartidas(t,d):
-    if t=0:
-        return partida sin disparos
-
-    alternativas := U (d' in disparos posibles) mejoresPartidas(t-1,d')
-    alternativas daniadas=partidas con danio(d,alternativas)
-    mejor_puntaje := max_(a in alternativas){puntaje(a)}
-    mejores_alternativas := {a in alternativas/puntaje(a)=mejorPuntaje}
-    return mejores_alternativas
-´´´
+\begin{algorithm}
+\caption{mejoresPartidas(t,d)}
+\KwData{Cantidad de turnos $t$ que demoran las partidas retornadas y disparos $d$ que se dispararán a continuación}
+\KwResult{Partidas con menor cantidad de puntos obtenidas}
+    $d \leftarrow \text{siguiente disparo}$ \\
+    $t \leftarrow \text{turno actual}$ \\
+    \If{$t=0$}{
+        \KwRet{partida inicial sin disparos}
+    }\Else{
+        A $\leftarrow \bigcup_{d' \in D}$ mejoresPartidas$(t-1,d')$ \\
+        A $\leftarrow$ conDisparo($d$,A) \\
+        $p^* \leftarrow max_{a \in A}\left \{puntaje(a)\right \}$ \\
+        A^* $\leftarrow \{ a \in A / puntaje(a)=p^*\}$ \\
+        \KwRet{ A^* }
+    }
+\end{algorithm}
 
 El algoritmo pretende devolver la lista de las mejores partidas posibles que se resuelvan en t turnos y que terminen con el disparo d, sin embargo, no lo logra. Devuelve las mejores partidas posibles al aplicarles el disparo d a cada una de las mejores partidas posibles en t-1 turnos.
 
