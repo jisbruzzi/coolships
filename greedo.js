@@ -36,7 +36,6 @@ function obtenerMejorDesde(partida,turno,vulnerabilidades,disparosPosibles){
         }
     }).partida
     
-    //quedarme con las alternativas no superadas COPY-PASTE DE dinamico.js. REFACTORIZAR?
     return obtenerMejorDesde(mejorPartida,turno+1,vulnerabilidades,disparosPosibles)
 }
 

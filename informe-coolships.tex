@@ -316,8 +316,43 @@ A partir de aquí, el algoritmo decide disparar al barco que ahora tiene vida 10
 
 Así, vemos que el algoritmo puede alcanzar situaciones subóptimas cuando encuentra que debería destruir más barcos de los que le es posible en la misma columna. El algoritmo Baco, codificado de forma similar a Greedo, postpone estas decisiones, devolviendo a cada paso las mejores soluciones posibles. Se incluyó en el código del trabajo práctico.
 
-\Section{Condiciones para que Greedo sea óptimo}
-Greedo es óptimo cuando no se da la necesidad de tomar decisiones alternativas, es decir, cuando hay una única solución mejor.
+\section{Complejidad temporal del algoritmo Greedo}
+El algoritmo Greedo ejecuta una única llamada recursiva, que concluye cuando el algoritmo destruye todos los barcos. Así, tal llamada recursiva implica una complejidad temporal de $O(\text{ejecucion} \cdot \text{turnosMaximos})$.
 
----------------- Acá habría que pobar que la solución óptima puede ser alcanzada por una serie de pasos Greedo y decir que Greedo sólo alcanza el óptimo cuando existe una sola de tales secuencias------------
+El tiempo de ejecución del algoritmo en sí es lineal con el tiempo de ejecución del algoritmo que calcula el mejor puntaje posible de una partida y la cantidad de configuraciones de disparos posibles: $O(\text{calculo mejor puntaje posible} \cdot \text{disparos posibles} \cdot \text{turnosMaximos})$.
+
+El cálculo del mejor puntaje posible es lineal con la cantidad de barcos y con el tiempo de ejecución del algoritmo que descubre la supervivencia mínima de cada barco:$O(\text{cálculo supervivencia mínima} \cdot \text{barcos}  \cdot \text{disparos posibles} \cdot \text{turnosMaximos})$.
+
+El algoritmo que descubre la supervivencia mínima de cada barco tiene una complejidad temporal que depende totalmente del problema: Se inicializa una variable con la salud del barco y se recorren las columnas avanzando y restando la vulnerabilidad correspondiente del acumulador hasta que el mismo se torne 0. Es posible escribir este algoritmo de forma que sea lineal con la cantidad de casilleros de la fila del barco. A continuación se detalla el pseudocódigo para lo mismo:
+
+\begin{algorithm}
+\caption{supervivencia(v,h)}
+    $v \leftarrow \text{array de vulnerabilidades de la fila}$ \\
+    $h \leftarrow \text{Salud inicial del barco analizado}$ \\
+    
+    
+    $T \leftarrow \text{Suma de todos los valores de } v$ \\
+    $vueltas \leftarrow \lfloor h / T \rfloor $ \\
+    $i \leftarrow vueltas \cdot len(v)$ \\
+    $h \leftarrow h-vueltas \cdot T$ \\
+    
+    \While{$h > 0$}{
+        $i \leftarrow i+1$\\
+        $h \leftarrow h-v_i$\\
+    }
+    \KwRet{$i$}
+    
+    
+\end{algorithm}
+
+Por lo tanto, el algoritmo tiene la complejidad temporal:
+$$O(\text{columnas del tablero} \cdot \text{barcos}  \cdot \text{disparos posibles} \cdot \text{turnosMaximos})$$
+
+
+\Section{Condiciones para que Greedo sea óptimo}
+Greedo es óptimo cuando no se da la necesidad de tomar decisiones alternativas, es decir, cuando hay una única solución mejor. 
+
+El menor puntaje estimado siempre será mayor al puntaje de la solución real, siempre y cuando la cantidad de barcos vivos sea mayor a la cantidad de lanzaderas. De lo contrario, estos puntajes serán iguales. Así, el juego nunca puede terminar con un puntaje menor al mínimo estimado. El algoritmo Baco descarta unicamente las decisiones que perjudican esta cota inferior. Sin embargo, la misma crece a lo largo de la ejecución del programa, hasta que coinciden la cota inferior y el puntaje encontrado. Debido a esto, es razonable pensar que Baco llega al óptimo. Esta afirmación no se demuestra sino que se deja como razonable.
+
+Greedo, por otro lado, sí descarta decisiones que tienen la menor cota, con lo cual, puede descartar una "rama" de decisiones que lleve a la solución óptima, la cual sí alcanzaría Baco. En el código se incluye el algoritmo Dinámico Jr., que aplica la heurística de Greedo al esquema de Dinamico. Es posible que ese algoritmo sí pueda alcanzar el óptimo en tiempo polinómico.
 \end{document}
