@@ -11,7 +11,6 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{framed}
-\usepackage[ruled, vlined, nofillcomment]{algorithm2e}
 
 \geometry{
     a4paper,
@@ -86,8 +85,8 @@
         A $\leftarrow \bigcup_{d' \in D}$ mejoresPartidas$(t-1,d')$ \\
         A $\leftarrow$ conDisparo($d$,A) \\
         $p^* \leftarrow max_{a \in A}\left \{puntaje(a)\right \}$ \\
-        A^* $\leftarrow \{ a \in A / puntaje(a)=p^*\}$ \\
-        \KwRet{ A^* }
+        $A^* \leftarrow \{ a \in A / puntaje(a)=p^*\}$ \\
+        \KwRet{$A^*$}
     }
 \end{algorithm}
 
@@ -103,7 +102,7 @@ Dinamico no conforma un algoritmo de resolución de la situación planteada, sin
 \begin{tabular}{ c | c c c c c c c c c c c c c}
 Hay una sola lanzadera. \\
 \hline
-V_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+V\_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 \hline
 10    &  9 &  1 &  1 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 10 \\
 1     &  1 &  1 &  1 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 10
@@ -117,18 +116,17 @@ En la solución mínima, el barco de vida 10 recibe un disparo en el primer turn
 El algoritmo Dinamico es memoizado. Como sus únicos parámetros son t y d, su complejidad temporal será lineal respecto de los valores que puede tomar cada uno de sus parámetros. En memoria, se generará una tabla como la siguiente:
 \begin{center}
 \begin{tabular}{c | c c c c}
-turno & disparo posible 1 & disparo posible 2 & disparo posible 3 & ...
-\hline
-t_0 & & & & \\
-t_1 & & & & \\
-t_2 & & & & \\
-t_3 & & & & \\
-t_4 & & & & \\
-t_5 & & & & \\
+turno & disparo posible 1 & disparo posible 2 & disparo posible 3 & ... \\
+t\_0 & & & & \\
+t\_1 & & & & \\
+t\_2 & & & & \\
+t\_3 & & & & \\
+t\_4 & & & & \\
+t\_5 & & & & \\
 ... & & & &
 \end{tabular}
 \end{center}
-El costo añadido de computar la solución en cada "casilla" de la tabla es lineal al costo de obtener el puntaje de cada partida alternativa, y por lo tanto a la cantidad de partidas alternativas. Por otro lado, el costo de computar el puntaje de cada partida alternativa es lineal con la cantidad de barcos (ya que es necesario determinar si cada uno de ellos está vivo en la misma). Así, el costo del algoritmo memoizado para resolver mejoresPartidas(t,d)=O(t*disparos posibles*costo de cada casillero)=O(t*disparos posibles*disparos posibles*costo de obtener puntaje de una partida)=O(t*disparos posibles*disparos posibles*barcos)=O(t*disparos posibles^2*barcos) .
+El costo añadido de computar la solución en cada "casilla" de la tabla es lineal al costo de obtener el puntaje de cada partida alternativa, y por lo tanto a la cantidad de partidas alternativas. Por otro lado, el costo de computar el puntaje de cada partida alternativa es lineal con la cantidad de barcos (ya que es necesario determinar si cada uno de ellos está vivo en la misma). Así, el costo del algoritmo memoizado para resolver $mejoresPartidas(t,d)=O(t*disparos posibles*costo de cada casillero)=O(t*disparos posibles*disparos posibles*costo de obtener puntaje de una partida)=O(t*disparos posibles*disparos posibles*barcos)=O(t*disparos posibles^2*barcos)$.
 
 \section{Condiciones para que Dinámico sea óptimo}
 Dinámico será óptimo cuando la mejor decisión posible en cada turno sea la que más barcos mate en ese turno. Esto sólo puede darse cuando las vulnerabilidades relacionadas a cada barco solamente ascienden a lo largo de la partida, cuando el tablero no es "rotatorio", tal como fue el planteo dado, es necesario asegurar también que ninguna partida dura tantos turnos como columnas del tablero. A continuación se demuestra esta afirmación para un tablero infinito, sin repeticiones.
@@ -275,11 +273,11 @@ Para ponerlo en términos más sencillos, Greedo se pregunta, para cada barco \t
 \section{Calidad de heurística de Greedo}
 A continuación se presenta un caso en el que el algoritmo Greedy falla.
 
+Hay una sola lanzadera. \\
 \begin{center}
 \begin{tabular}{ c | c c c c c c c c c c c c c}
-Hay una sola lanzadera. \\
 \hline
-V_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+V\_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 \hline
 15    &  5 &  5 &  10 &  0.1 &  0.1 &  0.1 & 0.1 &  0.1 &  0.1 &  0.1 &  0.1 & 0.1  & 0.1 \\
 10    &  1 &  0 &  10 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 1
@@ -288,11 +286,11 @@ V_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 
 En este caso, el algoritmo puede tomar dos decisiones distintas respecto del primer disparo: o bien dispararle al barco de salud 15 o bien al de salud 10. Ambas decisiones tienen la misma penalización, debido a que la misma está definida por el puntaje que se alcanzaría si se pudiera disparar 2 veces por turno y, al comenzar, ambos barcos serían dstruídos en la columna t3 según esta aproximación. La decisión desemboca en una de dos situaciones:
 
+Disparando inicialmente al barco de vida 15. Hay una sola lanzadera. \\
 \begin{center}
 \begin{tabular}{ c | c c c c c c c c c c c}
-Disparando inicialmente al barco de vida 15. Hay una sola lanzadera. \\
 \hline
-V_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+V\_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 \hline
 5     &  10 &  0.1 &  0.1 &  0.1 & 0.1 &  0.1 &  0.1 &  0.1 &  0.1 & 0.1  & 0.1 \\
 10    &  10 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 1
@@ -301,11 +299,11 @@ V_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 
 A partir de aquí, el algoritmo decide disparar al barco que ahora tiene vida 5, con lo cual, a partir de este turno, se alcanza un puntaje de 10 puntos. La alternativa es disparar al barco de vida 10, lo cual llevaría a un puntaje de 50 puntos.
 
+Disparando inicialmente al barco de vida 10. Hay una sola lanzadera. \\
 \begin{center}
 \begin{tabular}{ c | c c c c c c c c c c c}
-Disparando inicialmente al barco de vida 10. Hay una sola lanzadera. \\
 \hline
-V_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
+V\_i &   t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 \hline
 10    &  10 &  0.1 &  0.1 &  0.1 & 0.1 &  0.1 &  0.1 &  0.1 &  0.1 & 0.1  & 0.1 \\
 9     &  10 &  1 &  1 &  1 & 1 &  1 &  1 &  1 &  1 & 1  & 1
@@ -349,7 +347,7 @@ Por lo tanto, el algoritmo tiene la complejidad temporal:
 $$O(\text{columnas del tablero} \cdot \text{barcos}  \cdot \text{disparos posibles} \cdot \text{turnosMaximos})$$
 
 
-\Section{Condiciones para que Greedo sea óptimo}
+\section{Condiciones para que Greedo sea óptimo}
 Greedo es óptimo cuando no se da la necesidad de tomar decisiones alternativas, es decir, cuando hay una única solución mejor. 
 
 El menor puntaje estimado siempre será mayor al puntaje de la solución real, siempre y cuando la cantidad de barcos vivos sea mayor a la cantidad de lanzaderas. De lo contrario, estos puntajes serán iguales. Así, el juego nunca puede terminar con un puntaje menor al mínimo estimado. El algoritmo Baco descarta unicamente las decisiones que perjudican esta cota inferior. Sin embargo, la misma crece a lo largo de la ejecución del programa, hasta que coinciden la cota inferior y el puntaje encontrado. Debido a esto, es razonable pensar que Baco llega al óptimo. Esta afirmación no se demuestra sino que se deja como razonable.

@@ -1,3 +1,7 @@
 node_modules
 board.info
 package-lock.json
+*.aux
+*.log
+*.out
+*.toc
