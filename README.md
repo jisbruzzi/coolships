@@ -1,9 +1,9 @@
 # coolships
 Battleships, just cooler. Trabajo práctico 3 de TDA 7529.
 
-## Get best starting point for every ship
-In */bestpositions* execute:
-1. `npm install`
-2. `node bestPositions.js`
-3. visit `localhost:8080` and select game data file. 
-4. Click on `Get start positions`. 
+# How to run coolships
+In root dir, run `node main.js` with the following arguments, in this order:
+- path to file containing game's data
+- strategy selection: insert `greedo` or `dinamico`
+- number of throwers
+- [optional] `true` or `false`, according to your preference to optimize starting positions for ships.
