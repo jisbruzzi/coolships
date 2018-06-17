@@ -17,7 +17,7 @@
     margin=1.2in
 }
 
-\title{75.29 - Teoría de Algoritmos I: Trabajo Práctico n. 2}
+\title{75.29 - Teoría de Algoritmos I: Trabajo Práctico n. 3}
 \author{
     \\\\\\\\
     \Large{Equipo Q:}\\
@@ -28,7 +28,7 @@
     Sbruzzi, José (\texttt{\#97452})\\\texttt{jose.sbru@gmail.com}\\
     \\\\\\\\\\\\\\
 }
-\date{14.mayo.2018}
+\date{18.junio.2018}
 
 \begin{document}
 \maketitle
@@ -69,9 +69,9 @@
 
 
 
-
-\part{Dinamico}
-\section{Explicación del algoritmo}
+\part{Un juego de batalla naval}
+\section{Dinamico}
+\subsection{Explicación del algoritmo}
 
 \begin{algorithm}
 \caption{mejoresPartidas(t,d)}
@@ -94,7 +94,7 @@ El algoritmo pretende devolver la lista de las mejores partidas posibles que se 
 
 En la implementación javascript, los hiperparámetros del algoritmo (es decir, el tablero, la cantidad de lanzaderas, la cantidad de barcos y los puntos de vida de cada uno) también se pasan como argumentos.
 
-\section{Calidad de heurística de Dinámico}
+\subsubsection{Calidad de heurística de Dinámico}
 
 Dinamico no conforma un algoritmo de resolución de la situación planteada, sino una heurística. Esto se demuestra por medio del siguiente contraejemplo.
 
@@ -111,7 +111,7 @@ V\_i & t1 & t2 & t3 & t4 & t5 & t6 & t7 & t8 & t9 & t10 & t11 & t12 & t13 \\
 
 En la solución mínima, el barco de vida 10 recibe un disparo en el primer turno, aprovechándose de esta forma el gran daño que puede recibir; y el puntaje alcanzado es 5. Sin embargo, debido a que Dinámico es una heurística que aplica un criterio de greedy para determinar la mejor decisión por turno, determina que la mejor decisión para el primer turno es la que lleve a un mejor puntaje, es decir, disparar al barco de salud 1 primero y al de salud 10 después. Así, el puntaje mínimo alcanzado por Dinámico será 11.
 
-\section{Complejidad temporal del algoritmo}
+\subsubsection{Complejidad temporal del algoritmo}
 
 El algoritmo Dinamico es memoizado. Como sus únicos parámetros son t y d, su complejidad temporal será lineal respecto de los valores que puede tomar cada uno de sus parámetros. En memoria, se generará una tabla como la siguiente:
 \begin{center}
@@ -128,7 +128,7 @@ t\_5 & & & & \\
 \end{center}
 El costo añadido de computar la solución en cada "casilla" de la tabla es lineal al costo de obtener el puntaje de cada partida alternativa, y por lo tanto a la cantidad de partidas alternativas. Por otro lado, el costo de computar el puntaje de cada partida alternativa es lineal con la cantidad de barcos (ya que es necesario determinar si cada uno de ellos está vivo en la misma). Así, el costo del algoritmo memoizado para resolver $mejoresPartidas(t,d)=O(t*disparos posibles*costo de cada casillero)=O(t*disparos posibles*disparos posibles*costo de obtener puntaje de una partida)=O(t*disparos posibles*disparos posibles*barcos)=O(t*disparos posibles^2*barcos)$.
 
-\section{Condiciones para que Dinámico sea óptimo}
+\subsection{Condiciones para que Dinámico sea óptimo}
 Dinámico será óptimo cuando la mejor decisión posible en cada turno sea la que más barcos mate en ese turno. Esto sólo puede darse cuando las vulnerabilidades relacionadas a cada barco solamente ascienden a lo largo de la partida, cuando el tablero no es "rotatorio", tal como fue el planteo dado, es necesario asegurar también que ninguna partida dura tantos turnos como columnas del tablero. A continuación se demuestra esta afirmación para un tablero infinito, sin repeticiones.
 
 \subsection{Planteo matemático de la hipótesis y demostración}
@@ -247,9 +247,9 @@ Teniendo en cuenta la independencia de los disparos en cada uno de los turnos ci
 $$P_{d,v}(T)=min_{d'' \in D}\left \{ \sum_{i=1}^{T} H_{d'',v}(i) \right \}$$
 Lo cual concluye la demostración.
 
-\part{Greedo}
+\section{Greedo}
 
-\section{Explicación del algoritmo}
+\subsection{Explicación del algoritmo}
 
 \begin{algorithm}
 \caption{obtenerMejor(p)}
@@ -270,7 +270,7 @@ En el caso del algoritmo Greedy, para elegir el mejor disparo se utilizó una he
 
 Para ponerlo en términos más sencillos, Greedo se pregunta, para cada barco \textit{Cuánto pierdo si no te disparo?} y evaluando eso define qué movimiento hacer a continuación.
 
-\section{Calidad de heurística de Greedo}
+\subsection{Calidad de heurística de Greedo}
 A continuación se presenta un caso en el que el algoritmo Greedy falla.
 
 Hay una sola lanzadera. \\
@@ -314,7 +314,7 @@ A partir de aquí, el algoritmo decide disparar al barco que ahora tiene vida 10
 
 Así, vemos que el algoritmo puede alcanzar situaciones subóptimas cuando encuentra que debería destruir más barcos de los que le es posible en la misma columna. El algoritmo Baco, codificado de forma similar a Greedo, postpone estas decisiones, devolviendo a cada paso las mejores soluciones posibles. Se incluyó en el código del trabajo práctico.
 
-\section{Complejidad temporal del algoritmo Greedo}
+\subsection{Complejidad temporal del algoritmo Greedo}
 El algoritmo Greedo ejecuta una única llamada recursiva, que concluye cuando el algoritmo destruye todos los barcos. Así, tal llamada recursiva implica una complejidad temporal de $O(\text{ejecucion} \cdot \text{turnosMaximos})$.
 
 El tiempo de ejecución del algoritmo en sí es lineal con el tiempo de ejecución del algoritmo que calcula el mejor puntaje posible de una partida y la cantidad de configuraciones de disparos posibles: $O(\text{calculo mejor puntaje posible} \cdot \text{disparos posibles} \cdot \text{turnosMaximos})$.
@@ -347,10 +347,19 @@ Por lo tanto, el algoritmo tiene la complejidad temporal:
 $$O(\text{columnas del tablero} \cdot \text{barcos}  \cdot \text{disparos posibles} \cdot \text{turnosMaximos})$$
 
 
-\section{Condiciones para que Greedo sea óptimo}
+\subsection{Condiciones para que Greedo sea óptimo}
 Greedo es óptimo cuando no se da la necesidad de tomar decisiones alternativas, es decir, cuando hay una única solución mejor. 
 
 El menor puntaje estimado siempre será mayor al puntaje de la solución real, siempre y cuando la cantidad de barcos vivos sea mayor a la cantidad de lanzaderas. De lo contrario, estos puntajes serán iguales. Así, el juego nunca puede terminar con un puntaje menor al mínimo estimado. El algoritmo Baco descarta unicamente las decisiones que perjudican esta cota inferior. Sin embargo, la misma crece a lo largo de la ejecución del programa, hasta que coinciden la cota inferior y el puntaje encontrado. Debido a esto, es razonable pensar que Baco llega al óptimo. Esta afirmación no se demuestra sino que se deja como razonable.
 
 Greedo, por otro lado, sí descarta decisiones que tienen la menor cota, con lo cual, puede descartar una "rama" de decisiones que lleve a la solución óptima, la cual sí alcanzaría Baco. En el código se incluye el algoritmo Dinámico Jr., que aplica la heurística de Greedo al esquema de Dinamico. Es posible que ese algoritmo sí pueda alcanzar el óptimo en tiempo polinómico.
+
+\section{Posicionamiento inicial de barcos}
+La esencia del algoritmo se basa en analizar, por cada uno de los barcos, cuál 
+será el casillero de inicio que le brindará la mayor cantidad de puntos. Esto 
+se logra haciendo avanzar al barco un casillero hacia adelante y restándole en 
+cada paso la cantidad de vida correspondiente, hasta que el barco es destruido.
+La posición inicial óptima será la que le brinde al barco la mayor cantidad de 
+posiciones avanzadas. La complejidad para el cálculo inicial de cada uno de los
+barcos es entonces linealmente proporcional a la cantidad de columnas. 
 \end{document}
