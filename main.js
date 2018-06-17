@@ -8,6 +8,7 @@ const greedo = require("./greedo.js")
 const dinamico = require("./dinamico.js")
 const posicionador = require("./posicionadorGreedy.js");
 const barco = require("./barco.js");
+const vulnerabilidades = require("./vulnerabilidades.js");
 
 /* ships' points */
 var ships = [];
@@ -32,10 +33,13 @@ function main(){
 
   if(process.argv[STRATEGY_ARGV] == "greedo"){
     console.log("greedo chosen");
-    output = greedo(process.argv[CANTIDAD_LANZADERAS],board,ships);
+    console.log(process.argv[CANTIDAD_LANZADERAS]);
+    console.log(vulnerabilidades(board));
+    console.log(ships);
+    output = greedo(process.argv[CANTIDAD_LANZADERAS],vulnerabilidades(board),ships);
   } else if (process.argv[STRATEGY_ARGV] == "dinamico"){
     console.log("dinamico chosen");
-    output = dinamico(process.argv[CANTIDAD_LANZADERAS],board,ships);
+    output = dinamico(process.argv[CANTIDAD_LANZADERAS],vulnerabilidades(board),ships);
   }
   printOutput(output);
 }
@@ -57,3 +61,4 @@ function readFile(path){
 function printOutput(out){
   console.log(out.obtenerHistorial());
 }
+
