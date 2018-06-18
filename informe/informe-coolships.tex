@@ -8,7 +8,7 @@
 % to install algorithm2e pckg: sudo apt-get install texlive-science
 \usepackage[ruled, vlined, nofillcomment]{algorithm2e}
 \usepackage{float}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{framed}
 
@@ -70,6 +70,20 @@
 
 
 \part{Un juego de batalla naval}
+\section{Instrucciones de ejecución}
+En el directorio root del proyecto, correr \texttt{npm i} para instalar las 
+dependendicas necesarias.\\
+Para la ejecución propiamente dicha, correr el comando \texttt{npm start}
+seguido de los siguientes argumentos:
+\begin{itemize}
+        \item ruta al archivo que contiene la información del juego
+        \item selección de estrategia: \texttt{greedo} o 
+            \texttt{dinamico} 
+        \item cantidad de lanzaderas 
+        \item \textbf{opcional} \texttt{true} o \texttt{false} de acuerdo a si se 
+            desea utilizar posiciones iniciales de los barcos distintas a 0.
+            Default: \texttt{false}.
+\end{itemize}
 \section{Dinamico}
 \subsection{Explicación del algoritmo}
 

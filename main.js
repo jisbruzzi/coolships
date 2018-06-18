@@ -9,6 +9,7 @@ const dinamico = require("./dinamico.js")
 const posicionador = require("./posicionadorGreedy.js");
 const barco = require("./barco.js");
 const vulnerabilidades = require("./vulnerabilidades.js");
+const math = require('mathjs')
 
 /* ships' points */
 var ships = [];
@@ -33,32 +34,39 @@ function main(){
 
   if(process.argv[STRATEGY_ARGV] == "greedo"){
     console.log("greedo chosen");
-    console.log(process.argv[CANTIDAD_LANZADERAS]);
-    console.log(vulnerabilidades(board));
-    console.log(ships);
     output = greedo(process.argv[CANTIDAD_LANZADERAS],vulnerabilidades(board),ships);
   } else if (process.argv[STRATEGY_ARGV] == "dinamico"){
     console.log("dinamico chosen");
     output = dinamico(process.argv[CANTIDAD_LANZADERAS],vulnerabilidades(board),ships);
   }
-  printOutput(output);
+  printOutput(output.obtenerHistorial());
 }
 
-function readFile(path){
-  console.log('reading file...');
-  const rl = readline.createInterface({
-    input: fs.createReadStream(path)
-  });
-	rl.on('line', (line) => {
-    var splitValues = line.split(' ');
-    var ship = new barco(splitValues.shift());
-    ships.push(ship);
-    board.push(splitValues);
-    ++numOfShips;
-  });
+function readFile(path){ 
+  let data = fs.readFileSync(path, 'utf-8');
+
+  let lines = data.split('\n'); 
+  lines = lines.filter((line) => line.length);
+
+  lines.forEach((line) => parseInputLine(line)); 
+  board = math.transpose(board);
 }
 
-function printOutput(out){
-  console.log(out.obtenerHistorial());
+function parseInputLine(line, grafo) { 
+  let values = line.split(' '); 
+  var ship = new barco(values.shift());
+  ships.push(ship);
+  board.push(values);
+}
+
+function printOutput(out){ 
+  for(i = 0; i < out.length; ++i){
+    turno = i + 1;
+    console.log("Turno: " + turno);
+    console.log("salud barcos: " + out[i].ba);
+    console.log("posicion barcos: " + out[i].pos);
+    console.log("puntaje: " + out[i].pun);
+    console.log("descripcion disparo: " + out[i].disp + "\n");
+  }
 }
 
