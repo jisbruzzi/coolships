@@ -51,7 +51,8 @@ function disparosPosibles(lanzaderas,barcos){
     disparosDisparoAhora=disparosDisparoAhora.map((d)=>d.conDisparoInicial())
 
     let disparosNoDisparoAhora=disparosPosibles(lanzaderas,barcos-1)
-    disparosNoDisparoAhora=disparosNoDisparoAhora.map((d)=>d.sinDisparoInicial())
+    disparosNoDisparoAhora=disparosNoDisparoAhora.map((d)=>d.
+        sinDisparoInicial())
     
     return disparosDisparoAhora.concat(disparosNoDisparoAhora)
 }

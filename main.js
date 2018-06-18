@@ -34,10 +34,12 @@ function main(){
 
   if(process.argv[STRATEGY_ARGV] == "greedo"){
     console.log("greedo chosen");
-    output = greedo(process.argv[CANTIDAD_LANZADERAS],vulnerabilidades(board),ships);
+    output = greedo(process.argv[CANTIDAD_LANZADERAS],
+        vulnerabilidades(board),ships);
   } else if (process.argv[STRATEGY_ARGV] == "dinamico"){
     console.log("dinamico chosen");
-    output = dinamico(process.argv[CANTIDAD_LANZADERAS],vulnerabilidades(board),ships);
+    output = dinamico(process.argv[CANTIDAD_LANZADERAS],
+        vulnerabilidades(board),ships);
   }
   printOutput(output.obtenerHistorial());
 }

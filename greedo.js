@@ -2,14 +2,16 @@ const partida=require("./partida")
 const disparo=require("./disparo")
 
 /**
- * Construye la solución hacia adelante, minimizando una función de pérdida a cada paso
+ * Construye la solución hacia adelante, 
+ * minimizando una función de pérdida a cada paso
  * @param {number} lanzaderas 
  * @param {function} vulnerabilidades 
  * @param {array} barcos 
  */
 function greedo(lanzaderas,vulnerabilidades,barcos){
     let inicial=partida(barcos,0)
-    return obtenerMejorDesde(inicial,0,vulnerabilidades,disparo.posibles(lanzaderas,barcos.length))
+    return obtenerMejorDesde(inicial,0,vulnerabilidades,
+        disparo.posibles(lanzaderas,barcos.length))
 }
 
 
@@ -36,7 +38,8 @@ function obtenerMejorDesde(partida,turno,vulnerabilidades,disparosPosibles){
         }
     }).partida
     
-    return obtenerMejorDesde(mejorPartida,turno+1,vulnerabilidades,disparosPosibles)
+    return obtenerMejorDesde(mejorPartida,turno+1,vulnerabilidades,
+        disparosPosibles)
 }
 
 module.exports=greedo
