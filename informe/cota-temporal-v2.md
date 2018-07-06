@@ -1,0 +1,11 @@
+# Nueva cota temporal
+
+Kleinberg-Tardos demuestran que en cada ciclo del algoritmo Ford Fulkerson, el flujo aumenta, y que aumenta como mínimo en una unidad (afirmaciones 7.2 y 7.3), así, establecen que el ciclo del algoritmo en el que se aumentan los flujos se ejecutará al menos C veces, siendo C una cota del flujo máximo. Kleinberg y Tardos acotan el flujo máximo con C igual a la suma de las capacidades salientes de la fuente.
+
+Aquí pretendemos extender la cota temporal del algoritmo Ford-Fulkerson a redes de flujo con grafos con capacidades infinitas. En este caso, el flujo máximo o bien es infinito (en el caso de que exista un augmenting path conformado de aristas que sólo tienen capacidad infinita), o bien es un entero (si no existe tal augmenting path). Si el flujo máximo es un entero, debe ser menor o igual a la suma de todas las capacidades no infinitas de las aristas del grafo, ya que el corte mínimo debe estar conformado por aristas de capacidad entera (como mucho, todas). Si el flujo es infinito, es natural pensar que se encontrará en como mucho un path augmentation más que cualquier flujo entero. Por lo tanto, el algoritmo Ford-Fulkerson con capacidades infinitas tomará como mucho K+1 iteraciones, siendo K la suma de las capacidades no infinitas.
+
+Ahora pretendemos acotar temporalmente el algoritmo propuesto. Una primera cota es O(m^2K), es decir, la ejecución de Ford-Fulkerson m veces. Sin embargo, como el algoritmo no se inicia de nuevo, sino que se continúa en cada ciclo, la cantidad de veces que se ejecutarán path augmentations será m+K+1, con lo cual tendremos una cota de O(m*(m+K)). Como K>m (debido a que partimos de un grafo con capacidades finitas y enteras), tendremos la cota O(m*K). 
+
+Afirmación: La cantidad de veces que se ejecutan path augmentations en nuestro algoritmo será como mucho m+K+1.
+
+Demostración: En cada ejecución del ciclo exterior de nuestro algoritmo, el flujo no disminuye, es decir, o bien aumenta, o bien permanece constante. En nuestro algoritmo no volvemos a empezar la ejecución de Ford-Fulkerson para cada arista removida del grafo sino que se continúa la ejecución previa. Así, como el flujo máximo de una 
