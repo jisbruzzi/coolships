@@ -12,12 +12,15 @@ function bottleneck(grafo, camino) {
     return bottleneck;
 }
 
-// asume un grafo SIN CICLOS, es decir una red de flujos
 function init_residual_graph(grafo) {
     let residual = new Grafo();
     for(let nodo in grafo.aristas) {
         for(let arista of grafo.aristas[nodo]) {
-            residual.agregarArista(nodo, arista['destino'], arista['peso']);;
+            residual.agregarArista(nodo, arista['destino'], arista['peso']);
+            if (grafo.existeArista(arista['destino'], nodo)) {
+                continue;
+            }
+
             residual.agregarArista(arista['destino'], nodo, 0, true);
         }
     }
@@ -60,16 +63,16 @@ function getMaxUsedCapacities(grafo, residual, cantidad) {
         let used_capacity = residual.peso(arista['destino'], nodo); 
         let remaining_capacity = residual.peso(nodo, arista['destino']);
 
-        const min = Math.min(...max_used_capacities.map((x) => 
-              x['capacidad_usada'])); 
+        const min = 
+          Math.min(...max_used_capacities.map((x) => x['capacidad_usada'])); 
         if (max_used_capacities.length < cantidad || used_capacity > min) { 
           if (max_used_capacities.length == cantidad) { 
             max_used_capacities =  max_used_capacities.filter((x) => 
                 x['capacidad_usada'] !== min); 
           } 
           max_used_capacities.push({ 
-            'capacidad': used_capacity + remaining_capacity, 
-            'capacidad_usada': used_capacity, 
+            'capacidad': used_capacity + remaining_capacity, '
+              capacidad_usada': used_capacity, 
             'capacidad_restante': remaining_capacity, 
             'fuente': nodo, 
             'destino': arista['destino'] 
