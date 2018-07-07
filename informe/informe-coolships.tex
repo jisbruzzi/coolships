@@ -458,6 +458,66 @@ La descomposición puede resultar difícil de plantear como un algoritmo pero ba
 Se implementó el algoritmo propuesto (junto con Ford Fulkerson) en Nodejs. Para correr el código, asegurarse de contar con una versión de Node $>=$ 8.0, correr \textit{npm i}, y luego \textit{npm start}.
 
 \newpage
+\part{Anexo: Correcciones de Sabotaje!}
+La suposición que se toma es que KAOS quiere disminuir el flujo lo más posible.
+\begin{algorithm}
+    \KwData{$G$: red de flujo a determinar vulnerabilidades, $n$: cantidad de ejes a proteger}
+    \KwResult{$vul$: lista de ejes a proteger}
+    \BlankLine
+
+    $R$ $\leftarrow$ FordFulkerson(G); // Grafo residual\\
+    //obtener todas las aristas conexas a la fuente\\
+    aristasCorte$\leftarrow$ obtenerAristasCorte(R);\\
+    primeraVictima $\leftarrow$ max(e in aristasCorte) \{ capacidad\_e \}\\
+    ataques $\leftarrow$ [{flujo:flujo(R)$-$capacidad primera victima,atacada:primeraVictima}]\\
+    victima=primeraVictima;
+    
+    \BlankLine
+
+    \While{true}{
+        //hago infinita la capacidad de la arista que me limitaba antes\\
+        R.cambiarCapacidad(victima,infinito)\\
+        //elije uno de los augmenting path que pasan por victima y lo repite\\
+        aristasCorte $\leftarrow$ obtenerAristasCorte(R)\\
+        victima $\leftarrow$  max(e in aristasCorte) \{ capacidad\_e \}\\
+        flujoNuevo $\leftarrow$ flujo(R) $-$ capacidad\_victima\\
+
+        \BlankLine
+
+        ataques.add({flujo:flujoNuevo,atacada:victima})
+
+        \BlankLine
+        \If{$flujoNuevo > $ algun flujo existente}{
+            break;
+        }
+        \If{len(ataques)>2}{
+            ataques $\leftarrow$ los dos mejores ataques;
+        }
+    }
+    return los dos ataques con menor flujo del conjunto de ataques.
+
+    \caption{Pseudocódigo del algoritmo propuesto}
+\end{algorithm}
+\subsection{Explicacion del algoritmo propuesto}
+La fundamentación principal del algoritmo es el llamado \textit{max flow-min cut theorem}, enunciado en ``Algorithm Design'' de Kleinberg y Tardos como la afirmación 7.9. Este teorema establece que el flujo máximo es igual a la suma de las capacidades de las aristas del corte mínimo. Así, removiendo una arista de tal corte nos aseguramos que la capacidad del corte mínimo disminuye, y por lo tanto también el flujo máximo de la red.\\
+Se elige remover, en cada caso, la arista del corte mínimo con mayor capacidad. Sin embargo, remover esta arista no asegura que el flujo decaiga lo más posible, ya que podría existir un corte que -sin ser el mínimo- pueda tener todavía menor capacidad al remover la arista de mayor capacidad que posee. El algoritmo construído intenta apalear esta situación averiguando el menor corte mínimo que sea mayor al analizado: imposibilita que el corte analizado sea mínimo asignando una capacidad infinita a la arista atacada, y luego continúa la ejecución de Ford-Fulkerson, para luego encontrar el siguiente corte mínimo. Se especula que el siguiente corte mínimo no sea demasiado mayor al encontrado antes, y se vuelve a proceder como antes, con la esperanza de que la nueva remoción sea mejor -o no demasiado peor- respecto de la anterior.\\
+Se procede de esta manera de forma de obtener al menos dos soluciones. Sin embargo, si se encuentra que la siguiente solución es mejor, se continúan procesando más soluciones, con la esperanza de mejorar más a cada iteración.\\
+
+\subsection{Naturaleza de heurística del algoritmo construído}
+El algoritmo construído no descubre las aristas que causan la mayor disminución del flujo, como muestra el siguiente ejemplo:
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{res/contraejemplo.png}
+    \caption{Contraejemplo}
+\end{figure}
+En este caso, el algoritmo primero eliminaría el vértice de valor 30, y luego, en vez a de priorizar el corte de capacidad 66, que llevaría a un flujo máximo de 35 al remover la arista correspondiente, prioriza el corte de capacidad 62, que lleva a uno de 40.
+
+\subsection{Complejidad de la ejecución del algoritmo}
+En el caso de que el algoritmo encuentre cada vez mejores aristas para remover, el ciclo terminará con la solución de flujo infinito, es decir, hará infinitas las capacidades de todas las aristas. Como el infinito es mayor que cualquier mínimo corte que se encuentre, esta es la última situación analizada posible. En este caso, itera tantas veces como aristas tenga el grafo.\\
+Los cálculos llevados adelante en cada iteración tienen una complejidad temporal $O(1)$, excepto por \texttt{obtenerAristasCorte}. \texttt{obtenerAristasCorte} es un recorrido BFS, con lo cual su complejidad es $O(V+E)$. Así, la complejidad temporal del algoritmo es $O((V+E)*E)$, es decir, $O(E^2)$.
+
+
+\newpage
 
 \part{Codigo fuente}
 \lstinputlisting[caption={Battleships: barco}]{../barco.js}
