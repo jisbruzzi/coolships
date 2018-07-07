@@ -468,18 +468,20 @@ La suposición que se toma es que KAOS quiere disminuir el flujo lo más posible
     $R$ $\leftarrow$ FordFulkerson(G); // Grafo residual\\
     //obtener todas las aristas conexas a la fuente\\
     aristasCorte$\leftarrow$ obtenerAristasCorte(R);\\
-    primeraVictima $\leftarrow$ max(e in aristasCorte) \{ capacidad\_e \}\\
+    primeraVictima $\leftarrow$ max\_\{e in aristasCorte\} \{ capacidad\_e \}\\
     ataques $\leftarrow$ [{flujo:flujo(R)$-$capacidad primera victima,atacada:primeraVictima}]\\
     victima=primeraVictima;
     
     \BlankLine
 
-    \While{true}{
+
+    flujoNuevo $\leftarrow$ 0\\
+    \While{$flujoNuevo < $ algun flujo existente}{
         //hago infinita la capacidad de la arista que me limitaba antes\\
         R.cambiarCapacidad(victima,infinito)\\
         //elije uno de los augmenting path que pasan por victima y lo repite\\
         aristasCorte $\leftarrow$ obtenerAristasCorte(R)\\
-        victima $\leftarrow$  max(e in aristasCorte) \{ capacidad\_e \}\\
+        victima $\leftarrow$  max\_\{e in aristasCorte\} \{ capacidad\_e \}\\
         flujoNuevo $\leftarrow$ flujo(R) $-$ capacidad\_victima\\
 
         \BlankLine
@@ -487,10 +489,7 @@ La suposición que se toma es que KAOS quiere disminuir el flujo lo más posible
         ataques.add({flujo:flujoNuevo,atacada:victima})
 
         \BlankLine
-        \If{$flujoNuevo > $ algun flujo existente}{
-            break;
-        }
-        \If{len(ataques)>2}{
+        \If{len(ataques)$>$2}{
             ataques $\leftarrow$ los dos mejores ataques;
         }
     }
@@ -521,7 +520,7 @@ Ahora pretendemos acotar temporalmente el algoritmo propuesto. Una primera cota 
 
 \textbf{Afirmación} La cantidad de veces que se ejecutan \textit{path augmentations} en nuestro algoritmo será como mucho $m+K+1$.\\
 
-\textbf{Demostración} En cada ejecución del ciclo exterior de nuestro algoritmo, el flujo no disminuye, es decir, o bien aumenta, o bien permanece constante. Sea el aumento de flujo en el ciclo $i$ $\delta_i$, siendo $\delta_i \geq 0$, con $\delta_0$ el flujo inicial. En nuestro algoritmo no volvemos a empezar la ejecución de Ford-Fulkerson para cada arista removida del grafo sino que se continúa la ejecución previa. Así, a partir de las afirmaciones 7.2 y 7.3 de Kleinberg y Tardos podemos concluir que en cada ejecución de Ford-Fulkerson se ejecutan, como mucho, $\delta_i$ ciclos, es decir, se aumentan $\delta_i$ caminos. En algunas iteraciones del ciclo exterior podría no obtenerse ningún incremento respecto del flujo anterior, con lo cual la cantidad de veces que se buscan augmenting paths en la iteración $i$ es max\{1,$\delta_i$\}. Sea $\delta_i$ la suma de $\delta_j$ con $j$ desde $0$ hasta $i$. Así, $\delta_i$ es el flujo máximo obtenido en la iteración $i$. Así, la suma de max\{1,$\delta_j$\} desde $0$ hasta $i \leq \delta_i + i$ $\forall i$. Sea $M$ la iteración final del algoritmo en el peor caso. En ella, se alcanzará un flujo infinito. Así, en la iteración $M-1$ se tendrá el último flujo finito. Tal como discutido previamente, $\delta_{M-1} \leq sum c_e$ $\forall e \in E / c_e \neq \infty$, teniendo $c_e$ los valores correspondientes a la iteración $M-1$. Como en la iteración $M-1$ se habrá cambiado el valor de $M-1$ capacidades a infinito, entonces la suma de las capacidades finitas en el paso $M-1$ será menor que la suma de las capacidades de la red inicial $K$. Por lo tanto, $\delta_{M-1}\leq K$. En conclusión, la cantidad de veces que se buscan augmenting paths hasta la ejecución M-1 es la suma de max\{1,$\delta_j$\} desde $0$ hasta $M-1 \leq \delta_{M-1} + M - 1 \leq K + M - 1$. Como el algoritmo se detiene, en el peor caso, cuando las $m$ aristas tuvieron su capacidad cambiada a infinito, tenemos que $M \leq m$, con lo cual $K+M-1 \leq K+m-1$. Además, en el paso $M$ se busca el último augmenting path: aquel que va de $s$ a $t$, con capacidad infinita en todas sus aristas. Así, se buscarán, como mucho $k+m-1+1$ augmneting paths, llegando así al máximo de $k+m$ augmenting paths.
+\textbf{Demostración} En cada ejecución del ciclo exterior de nuestro algoritmo, el flujo no disminuye, es decir, o bien aumenta, o bien permanece constante. Sea el aumento de flujo en el ciclo $i$ $\delta_i$, siendo $\delta_i \geq 0$, con $\delta_0$ el flujo inicial. En nuestro algoritmo no volvemos a empezar la ejecución de Ford-Fulkerson para cada arista removida del grafo sino que se continúa la ejecución previa. Así, a partir de las afirmaciones 7.2 y 7.3 de Kleinberg y Tardos podemos concluir que en cada ejecución de Ford-Fulkerson se ejecutan, como mucho, $\delta_i$ ciclos, es decir, se aumentan $\delta_i$ caminos. En algunas iteraciones del ciclo exterior podría no obtenerse ningún incremento respecto del flujo anterior, con lo cual la cantidad de veces que se buscan augmenting paths en la iteración $i$ es max\{1,$\delta_i$\}. Sea $\Delta_i$ la suma de $\delta_j$ con $j$ desde $0$ hasta $i$. Así, $\Delta_i$ es el flujo máximo obtenido en la iteración $i$. Así, la suma de max\{1,$\delta_j$\} desde $0$ hasta $i \leq \Delta_i + i$ $\forall i$. Sea $M$ la iteración final del algoritmo en el peor caso. En ella, se alcanzará un flujo infinito. Así, en la iteración $M-1$ se tendrá el último flujo finito. Tal como discutido previamente, $\Delta_{M-1} \leq \sum c_e$ $\forall e \in E / c_e \neq \infty$, teniendo $c_e$ los valores correspondientes a la iteración $M-1$. Como en la iteración $M-1$ se habrá cambiado el valor de $M-1$ capacidades a infinito, entonces la suma de las capacidades finitas en el paso $M-1$ será menor que la suma de las capacidades de la red inicial $K$. Por lo tanto, $\Delta_{M-1}\leq K$. En conclusión, la cantidad de veces que se buscan augmenting paths hasta la ejecución M-1 es la suma de max\{1,$\delta_j$\} desde $0$ hasta $M-1 \leq \Delta_{M-1} + M - 1 \leq K + M - 1$. Como el algoritmo se detiene, en el peor caso, cuando las $m$ aristas tuvieron su capacidad cambiada a infinito, tenemos que $M \leq m$, con lo cual $K+M-1 \leq K+m-1$. Además, en el paso $M$ se busca el último augmenting path: aquel que va de $s$ a $t$, con capacidad infinita en todas sus aristas. Así, se buscarán, como mucho $k+m-1+1$ augmneting paths, llegando así al máximo de $k+m$ augmenting paths.
 
 \newpage
 
