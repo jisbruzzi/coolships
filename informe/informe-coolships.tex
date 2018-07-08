@@ -468,25 +468,25 @@ La suposición que se toma es que KAOS quiere disminuir el flujo lo más posible
     $R$ $\leftarrow$ FordFulkerson($G$) // Grafo residual \\
     //las pertenecientes al corte mínimo \\
     $aristasCorte$ $\leftarrow$ obtenerAristasCorte($R$) \\
-    $primeraVictima$ $\leftarrow$ max_{e \in aristasCorte} \{ capacidad_e \} \\
-    $primerFlujo$ $\leftarrow$ flujo(R)$-$ $capacidad$_{primeraVictima} \\
+    $primeraVictima$ $\leftarrow$ $max_{e \in aristasCorte}$ \{ $capacidad_e$ \} \\
+    $primerFlujo$ $\leftarrow$ flujo(R)$-$ $capacidad_{primeraVictima}$ \\
     $ataques$ $\leftarrow$ \{($primerFlujo$,$atacada$)\}\\
     $victima$ $\leftarrow$ $primeraVictima$ \\
     \BlankLine
     $flujoNuevo$ $\leftarrow$ 0\\
-    \While{$flujoNuevo < $ max\{ f / (f,v) \in ataques \}}{
-        $R$ $\leftarrow$ $R$.cambiarCapacidad($victima$,\infty)\\
+    \While{$flujoNuevo < $ max\{ f / (f,v) $\in$ ataques \}}{
+        $R$ $\leftarrow$ $R$.cambiarCapacidad($victima$,$\infty$)\\
         //cambiarCapacidad continúa la ejecución de Ford Fulkerson\\
         aristasCorte $\leftarrow$ obtenerAristasCorte($R$)\\
-        $victima$ $\leftarrow$  max_{e \in aristasCorte} \{ capacidad_e \}\\
-        $flujoNuevo$ $\leftarrow$ flujo(R) $-$ capacidad_{victima}\\
+        $victima$ $\leftarrow$  $max_{e \in aristasCorte}$ \{ $capacidad_e$ \}\\
+        $flujoNuevo$ $\leftarrow$ flujo(R) $-$ $capacidad_{victima}$\\
 
         \BlankLine
 
         $ataques$ $\leftarrow$ $ataques$ $\cup$ \{ (flujo,victima) \} \\
 
         \BlankLine
-        \If{\|ataques\| > 2}{
+        \If{$|ataques|$ $>$ 2}{
             ataques $\leftarrow$ los dos (f,v) $\in$ $ataques$ con menor f \\
         }
     }
