@@ -462,38 +462,36 @@ Se implementó el algoritmo propuesto (junto con Ford Fulkerson) en Nodejs. Para
 La suposición que se toma es que KAOS quiere disminuir el flujo lo más posible.
 \begin{algorithm}
     \KwData{$G$: red de flujo a determinar vulnerabilidades, $n$: cantidad de ejes a proteger}
-    \KwResult{$vul$: lista de ejes a proteger}
+    \KwResult{lista de ejes a proteger}
     \BlankLine
 
-    $R$ $\leftarrow$ FordFulkerson(G); // Grafo residual\\
-    //obtener todas las aristas conexas a la fuente\\
-    aristasCorte$\leftarrow$ obtenerAristasCorte(R);\\
-    primeraVictima $\leftarrow$ max\_\{e in aristasCorte\} \{ capacidad\_e \}\\
-    ataques $\leftarrow$ [{flujo:flujo(R)$-$capacidad primera victima,atacada:primeraVictima}]\\
-    victima=primeraVictima;
-    
+    $R$ $\leftarrow$ FordFulkerson($G$) // Grafo residual \\
+    //las pertenecientes al corte mínimo \\
+    $aristasCorte$ $\leftarrow$ obtenerAristasCorte($R$) \\
+    $primeraVictima$ $\leftarrow$ max_{e \in aristasCorte} \{ capacidad_e \} \\
+    $primerFlujo$ $\leftarrow$ flujo(R)$-$ $capacidad$_{primeraVictima} \\
+    $ataques$ $\leftarrow$ \{($primerFlujo$,$atacada$)\}\\
+    $victima$ $\leftarrow$ $primeraVictima$ \\
     \BlankLine
-
-
-    flujoNuevo $\leftarrow$ 0\\
-    \While{$flujoNuevo < $ algun flujo existente}{
-        //hago infinita la capacidad de la arista que me limitaba antes\\
-        R.cambiarCapacidad(victima,infinito)\\
-        //elije uno de los augmenting path que pasan por victima y lo repite\\
-        aristasCorte $\leftarrow$ obtenerAristasCorte(R)\\
-        victima $\leftarrow$  max\_\{e in aristasCorte\} \{ capacidad\_e \}\\
-        flujoNuevo $\leftarrow$ flujo(R) $-$ capacidad\_victima\\
+    $flujoNuevo$ $\leftarrow$ 0\\
+    \While{$flujoNuevo < $ max\{ f / (f,v) \in ataques \}}{
+        $R$ $\leftarrow$ $R$.cambiarCapacidad($victima$,\infty)\\
+        //cambiarCapacidad continúa la ejecución de Ford Fulkerson\\
+        aristasCorte $\leftarrow$ obtenerAristasCorte($R$)\\
+        $victima$ $\leftarrow$  max_{e \in aristasCorte} \{ capacidad_e \}\\
+        $flujoNuevo$ $\leftarrow$ flujo(R) $-$ capacidad_{victima}\\
 
         \BlankLine
 
-        ataques.add({flujo:flujoNuevo,atacada:victima})
+        $ataques$ $\leftarrow$ $ataques$ $\cup$ \{ (flujo,victima) \} \\
 
         \BlankLine
-        \If{len(ataques)$>$2}{
-            ataques $\leftarrow$ los dos mejores ataques;
+        \If{\|ataques\| > 2}{
+            ataques $\leftarrow$ los dos (f,v) $\in$ $ataques$ con menor f \\
         }
     }
-    return los dos ataques con menor flujo del conjunto de ataques.
+    \BlankLine
+    return los dos (f,v) $\in$ $ataques$ con menor f \\
 
     \caption{Pseudocódigo del algoritmo propuesto}
 \end{algorithm}
